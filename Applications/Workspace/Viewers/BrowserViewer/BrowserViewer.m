@@ -64,6 +64,29 @@
   return NO;
 }
 
+- (id)validRequestorForSendType:(NSString *)st
+                     returnType:(NSString *)rt
+{
+  NSString* currentPath = [[self delegate]currentPath];
+  if (currentPath && [st isEqual:NSStringPboardType])
+    return self;
+  else
+    return nil;
+}
+
+- (BOOL)writeSelectionToPasteboard:(NSPasteboard*) pb types:(NSArray*) types
+{
+  NSString* currentPath = [[self delegate]currentPath];
+  if (currentPath) {
+    [pb declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
+    [pb setString:currentPath forType:NSStringPboardType];
+    return YES;
+  }
+  else {
+    return NO;
+  }
+}
+
 - (void)selectAll:(id)sender
 {
   //NSDebugLLog(@"Browser", @"BrowserMatrix: selectAll:");
@@ -195,6 +218,12 @@
 @end
 
 @implementation BrowserViewer (Private)
+
+
+- (NSString*) currentPath
+{
+  return currentPath;
+}
 
 - (void)ensureBrowserHasEmptyColumn
 {
@@ -672,6 +701,7 @@
   NSArray  *filenames = nil;
   NSArray  *selectedCells = [view selectedCells];
   unsigned length = [dirPath length];
+  NSPasteboard *pb = [NSPasteboard pasteboardWithName:@"Selection"];
 
   NSDebugLLog(@"Browser",
               @"[BrowserViewer] doClick:%@ lastColumn(selected): %li(%li)", 
@@ -720,6 +750,9 @@
     // FileViewer
     [fileViewer displayPath:dirPath selection:filenames sender:self];
   }
+
+  [pb declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
+  [pb setString:dirPath forType:NSStringPboardType];
   
   ASSIGN(currentPath, dirPath);
   ASSIGN(selection, filenames);

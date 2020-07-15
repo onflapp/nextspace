@@ -78,6 +78,7 @@
   unsigned   _dragMask;
 }
 
+- (NSString*) currentPath;
 - (void)open:(id)sender;
 
 @end

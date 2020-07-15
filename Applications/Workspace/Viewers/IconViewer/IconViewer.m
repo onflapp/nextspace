@@ -185,6 +185,31 @@
 static NSRect boxRect;
 static NSRect viewFrame;
 @implementation WMIconView
+
+- (id)validRequestorForSendType:(NSString *)st
+                     returnType:(NSString *)rt
+{
+  NSString* currentPath = [[self delegate]currentPath];
+  if (currentPath && [st isEqual:NSStringPboardType])
+    return self;
+  else
+    return nil;
+}
+
+- (BOOL)writeSelectionToPasteboard:(NSPasteboard*) pb types:(NSArray*) types
+{
+  NSString* currentPath = [[self delegate]currentPath];
+  if (currentPath) {
+    [pb declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
+    [pb setString:currentPath forType:NSStringPboardType];
+    return YES;
+  }
+  else {
+    return NO;
+  }
+}
+
+
 - (void)drawRect:(NSRect)r
 {
   if (isDrawOpenAnimation) {
@@ -317,6 +342,10 @@ static NSRect viewFrame;
   [iconView release];
   
   return self;
+}
+- (NSString*) currentPath
+{
+  return currentPath;
 }
 
 //=============================================================================

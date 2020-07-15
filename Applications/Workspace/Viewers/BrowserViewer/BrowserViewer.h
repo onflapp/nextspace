@@ -46,6 +46,8 @@
   unsigned   numVerts;
 }
 
+- (NSString*) currentPath;
+
 - (void)reloadColumn:(NSUInteger)col;
 - (void)reloadLastColumn;
 
