@@ -30,9 +30,9 @@
 
 @interface Document : NSObject
 {
-  NSWindow *window;
-  GTKWebView* webView;
-  NSTextField* addressField;
+  IBOutlet NSWindow *window;
+  IBOutlet GTKWebView* webView;
+  IBOutlet NSTextField* addressField;
 }
 
 - (void) loadLocation:(id) sender;

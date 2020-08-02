@@ -2,25 +2,37 @@
     "## Comment" = "Do NOT change this file, Gorm maintains it";
     Document = {
 	Actions = (
-	    "loadLocation:"
+	    "loadLocation:",
+	    "goHome:"
 	);
 	Outlets = (
-	    locationAddress,
-	    webView
+	    addressField,
+	    webView,
+	    window
 	);
 	Super = NSObject;
     };
     FirstResponder = {
 	Actions = (
+	    "goBack:",
+	    "goForward:",
 	    "loadLocation:",
 	    "loadURL:",
-	    "copy:"
+	    "goHome:"
 	);
 	Super = NSObject;
     };
-    WebView = {
+    GTKWebView = {
 	Actions = (
-	    "copy:"
+	    "goBack:",
+	    "goForward:"
+	);
+	Outlets = (
+	);
+	Super = GTKWidgetView;
+    };
+    GTKWidgetView = {
+	Actions = (
 	);
 	Outlets = (
 	);

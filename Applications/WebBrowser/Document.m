@@ -28,16 +28,44 @@
 - (id) init {
   self = [super init];
   [NSBundle loadNibNamed:@"Document" owner:self];
+  [window setFrameAutosaveName:@"browser_window"];
+  
+  //GORM doesn't make the connection our GTKWebView for some reason
+  //so we have to do it manually
+  for (NSView* view in [[window contentView] subviews]) {
+    if ([view isKindOfClass:[GTKWebView class]]) {
+      webView = view;
+      break;
+    }
+  }
+  
   return self;
+}
+
+- (void) goHome:(id) sender {
+  NSString* url = [[NSURL alloc] initWithString:@"https://www.x.org"];
+  
+  if (url) {
+    [addressField setStringValue:[url description]];
+    [webView loadURL:url];
+  }
 }
 
 - (void) loadLocation:(id) sender {
   NSString* val = nil;
+  NSURL* url = nil;
   
-  if ([sender isKindOf:[NSTextField class]]) val = [sender stringValue];
+  if ([sender isKindOfClass:[NSTextField class]]) val = [sender stringValue];
   else val = [addressField stringValue];
   
-  NSURL* url = [NSURL URLWithString:val];
+  if ([val hasPrefix:@"http://"] || [val hasPrefix:@"https://"]) {
+    url = [NSURL URLWithString:val];
+  }
+  else {
+    NSString* search = [NSString stringWithFormat:@"https://www.google.com/search?q=%@", val];
+    url = [[NSURL alloc] initWithString:search];
+  }
+  
   if (url) {
     [webView loadURL:url];
   }

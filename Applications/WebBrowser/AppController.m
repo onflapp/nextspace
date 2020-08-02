@@ -45,26 +45,9 @@
 {
 }
 
-- (void) receivedEvent:(void*) data
-     type:(RunLoopEventType)type
-     extra:(void*)extra
-     forMode:(NSString*)mode 
-{
-  //BOOL rv = gtk_main_iteration_do(FALSE);
-}
-
-
-
 - (void) applicationDidFinishLaunching: (NSNotification *)aNotif
 {
-// Uncomment if your application is Renaissance-based
-//  [NSBundle loadGSMarkupNamed: @"Main" owner: self];
-/*
-NSRunLoop* loop = [NSRunLoop mainRunLoop];
-  Display* dpy = (Display*)[GSCurrentServer() serverDevice];
-  int xeq = XConnectionNumber(dpy);
-  [loop addEvent:(void*)(gsaddr)xeq type:ET_RDESC watcher:self forMode:NSDefaultRunLoopMode];
-  */
+
 }
 
 - (BOOL) applicationShouldTerminate: (id)sender
@@ -77,7 +60,7 @@ NSRunLoop* loop = [NSRunLoop mainRunLoop];
 }
 
 - (BOOL) application: (NSApplication *)application
-	    openFile: (NSString *)fileName
+            openFile: (NSString *)fileName
 {
   return NO;
 }
