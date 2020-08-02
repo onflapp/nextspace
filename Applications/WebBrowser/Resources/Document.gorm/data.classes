@@ -1,0 +1,29 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    Document = {
+	Actions = (
+	    "loadLocation:"
+	);
+	Outlets = (
+	    locationAddress,
+	    webView
+	);
+	Super = NSObject;
+    };
+    FirstResponder = {
+	Actions = (
+	    "loadLocation:",
+	    "loadURL:",
+	    "copy:"
+	);
+	Super = NSObject;
+    };
+    WebView = {
+	Actions = (
+	    "copy:"
+	);
+	Outlets = (
+	);
+	Super = NSView;
+    };
+}
