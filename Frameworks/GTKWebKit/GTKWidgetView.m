@@ -26,6 +26,8 @@
 #include <gtk/gtk.h>
 #include <gtk/gtkx.h>
 
+static BOOL gtkwdigets_gtk_initialized;
+
 @interface GTKWidgetView ()
 {
   GtkWidget* widget;
@@ -48,6 +50,15 @@ gint handler_event(GtkWidget* widget, GdkEventButton* evt, gpointer func_data)
 
 @implementation GTKWidgetView
 
++ (void) initialize
+{
+  if (!gtkwdigets_gtk_initialized) {
+    NSLog(@"GTKWidgetView: gtk_init called for the very first time");
+    gtk_init(NULL, 0);
+    gtkwdigets_gtk_initialized++;
+  }
+}
+
 - (id) initWithFrame:(NSRect)r 
 {
   self = [super initWithFrame:r];
@@ -55,6 +66,11 @@ gint handler_event(GtkWidget* widget, GdkEventButton* evt, gpointer func_data)
   xwindowid = -1;
   
   return self;
+}
+
+- (void) dealloc
+{
+  [super dealloc];
 }
 
 - (GtkWidget*) createWidget
@@ -67,6 +83,13 @@ gint handler_event(GtkWidget* widget, GdkEventButton* evt, gpointer func_data)
     if (!widget) { 
       widget = [self createWidget];
       [self mapWidgetToWindow];
+    }
+  }
+  else {
+    if (widget) {
+      [self unmapWidgetFromWindow];
+      widget = NULL;
+      xwindowid = 0;
     }
   }
 }
@@ -111,7 +134,8 @@ gint handler_event(GtkWidget* widget, GdkEventButton* evt, gpointer func_data)
   NSInteger h = (NSInteger)r.size.height;
   
   y = [[[self window] contentView] bounds].size.height - r.size.height - r.origin.y;
-
+  y += 10;
+  
   return NSMakeRect(x, y, w, h);
 }
 
@@ -150,6 +174,17 @@ gint handler_event(GtkWidget* widget, GdkEventButton* evt, gpointer func_data)
   gtk_widget_show_all(main_window);
     
   [self startProcessingEvents];
+}
+
+- (void) unmapWidgetFromWindow {
+  if (!widget) return;
+  
+  //XDestroyWindow(xdisplay, xwindowid);
+  
+  [self processPendingEvents];
+  
+  GtkWidget* main_window = gtk_widget_get_parent_window(widget);
+  gtk_window_close(main_window);
 }
 
 - (void) processPendingEvents {  

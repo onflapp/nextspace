@@ -8,6 +8,10 @@
 
 - (void) loadURL:(NSURL*) url;
 
+- (void) stopLoading:(id) sender;
+- (void) goBack:(id) sender;
+- (void) goForward:(id) sender;
+
 @end
 
 #endif
