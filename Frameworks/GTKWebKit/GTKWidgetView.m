@@ -31,18 +31,28 @@ static BOOL gtkwdigets_gtk_initialized;
 @interface GTKWidgetView ()
 {
   GtkWidget* widget;
+  GtkWidget* gwindow;
   Display* xdisplay;
   Window xwindowid;
+  BOOL hasfocus;
 }
 
 @end
+
+gint handler_realize(GtkWidget* widget, gpointer user)
+{
+  NSLog(@"realize");
+  gtk_widget_set_window(widget, (GdkWindow*)user);
+
+  return FALSE;
+}
 
 gint handler_event(GtkWidget* widget, GdkEventButton* evt, gpointer func_data) 
 {
   NSView* view = (NSView*)func_data;
   NSWindow* win = [view window];
   
-  [win makeKeyAndOrderFront:nil];
+  //[win makeKeyAndOrderFront:nil];
   [win makeFirstResponder:view];
 
   return FALSE;
@@ -102,13 +112,17 @@ gint handler_event(GtkWidget* widget, GdkEventButton* evt, gpointer func_data)
 - (BOOL) becomeFirstResponder
 {
   if (widget) {
-    gtk_widget_grab_focus(widget);
+    if (!hasfocus) {
+      XSetInputFocus(xdisplay, xwindowid, RevertToNone, CurrentTime);
+      hasfocus = TRUE;
+    }
   }
   return TRUE;
 }
 
 - (BOOL) resignFirstResponder
 {
+  hasfocus = FALSE;
   return TRUE;
 }
 
@@ -149,15 +163,32 @@ gint handler_event(GtkWidget* widget, GdkEventButton* evt, gpointer func_data)
   if (!widget) return;
   if (![self window]) return;
 
-  GtkWidget* main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  gtk_widget_realize(main_window);
-  
-  gtk_container_add(GTK_CONTAINER(main_window), GTK_WIDGET(widget));
-
   Window xw = (Window)[[self window]windowRef];
   GdkDisplay* gd = gdk_display_get_default();
   Display* xd = gdk_x11_display_get_xdisplay(gd);
+
+  GtkWidget* main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  gtk_widget_realize(main_window);
+
   GdkWindow* gw = gtk_widget_get_window(main_window);
+  
+  /*
+  int xs = DefaultScreen(xd);
+  Window xxw = XCreateSimpleWindow(xd, RootWindow(xd, xs), 10, 10, 100, 100, 1, BlackPixel(xd, xs), WhitePixel(xd, xs));
+  XMapWindow(xd, xxw);
+
+  GdkWindow* gw = gdk_x11_window_foreign_new_for_display(gd, xxw);
+  GtkWidget* main_window = gtk_widget_new(GTK_TYPE_WINDOW, NULL);
+  
+  g_signal_connect(main_window, "realize", G_CALLBACK(handler_realize), gw);
+  gtk_widget_set_has_window(main_window, TRUE);
+  
+  gtk_widget_realize(main_window);
+  [self startProcessingEvents];
+  */
+  
+  gtk_container_add(GTK_CONTAINER(main_window), GTK_WIDGET(widget));
+
   Window xid = gdk_x11_window_get_xid(gw);
   
   NSRect r = [self convertToNativeWindowRect];
@@ -165,7 +196,8 @@ gint handler_event(GtkWidget* widget, GdkEventButton* evt, gpointer func_data)
   XReparentWindow(xd, xid, xw, r.origin.x, r.origin.y);
   XResizeWindow(xd, xid, r.size.width, r.size.height);
   XFlush(xd);
-  
+ 
+  gwindow = main_window; 
   xdisplay = xd;
   xwindowid = xid;
 
@@ -183,14 +215,14 @@ gint handler_event(GtkWidget* widget, GdkEventButton* evt, gpointer func_data)
   
   [self processPendingEvents];
   
-  GtkWidget* main_window = gtk_widget_get_parent_window(widget);
-  gtk_window_close(main_window);
+  //GtkWidget* main_window = gtk_widget_get_parent_window(widget);
+  //gtk_window_close(main_window);
 }
 
-- (void) processPendingEvents {  
+- (void) processPendingEvents {
   while(gtk_events_pending()) {
     gtk_main_iteration();
-  }  
+  }
 }
 
 - (void) startProcessingEvents

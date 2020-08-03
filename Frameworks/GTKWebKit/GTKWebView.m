@@ -33,35 +33,16 @@
 
 - (void) copy:(id)sender {
   webkit_web_view_execute_editing_command(webView, WEBKIT_EDITING_COMMAND_COPY);
-  [self processPendingEvents];
-  
-  GtkClipboard* clip = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
-  gchar* text = gtk_clipboard_wait_for_text(clip);
-  
-  if (text) {
-    NSString* val = [NSString stringWithUTF8String:text];
-    
-    NSPasteboard* pboard = [NSPasteboard generalPasteboard];
-    [pboard declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
-    [pboard setString:val forType: NSStringPboardType];
-  }
+  //[self processPendingEvents];
 }
 
 - (void) cut:(id)sender {
   webkit_web_view_execute_editing_command(webView, WEBKIT_EDITING_COMMAND_CUT);
   [self processPendingEvents];
-  
-  GtkClipboard* clip = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
-  gchar* text = gtk_clipboard_wait_for_text(clip);
-  
-  if (text) {
-    NSPasteboard* pboard = [NSPasteboard generalPasteboard];
-    [pboard declareTypes:[NSArray arrayWithObject: NSStringPboardType] owner:nil];
-    [pboard setString:[NSString stringWithUTF8String:text] forType:NSStringPboardType];
-  }
 }
 
 - (void) paste:(id)sender {
+  NSLog(@"paste");
   NSPasteboard* pboard = [NSPasteboard generalPasteboard];
   NSString* str = [pboard stringForType:NSStringPboardType];
   
