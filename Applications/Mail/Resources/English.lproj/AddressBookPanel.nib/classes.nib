@@ -1,0 +1,21 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {
+                bccClicked = id; 
+                ccClicked = id; 
+                doubleClicked = id; 
+                openClicked = id; 
+                selectionInBrowserHasChanged = id; 
+                toClicked = id; 
+            }; 
+            CLASS = AddressBookController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {browser = NSBrowser; open = NSButton; tableView = NSTableView; }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = StripeTableView; LANGUAGE = ObjC; SUPERCLASS = NSTableView; }
+    ); 
+    IBVersion = 1; 
+}

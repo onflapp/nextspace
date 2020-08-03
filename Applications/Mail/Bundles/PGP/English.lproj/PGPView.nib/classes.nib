@@ -1,0 +1,24 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {removePassphraseFromCacheButtonClicked = id; }; 
+            CLASS = PGPViewController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                alwaysEncrypt = NSButton; 
+                alwaysSign = NSButton; 
+                alwaysUseMultipartPGP = NSButton; 
+                gpgPathField = NSTextField; 
+                removePassphraseFromCacheButton = NSButton; 
+                removePassphraseFromCacheField = NSTextField; 
+                useFromForSigning = NSButton; 
+                userEMailAddressField = NSTextField; 
+                versionLabel = NSTextField; 
+                view = id; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}
