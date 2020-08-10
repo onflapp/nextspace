@@ -27,16 +27,19 @@
 #include <gtk/gtkx.h>
 
 NSMutableArray* GTKWidgetView_gtk_loop_queue;
+NSLock* GTKWidgetView_gtk_loop_queue_lock;
 
 gint handler_idle(gpointer data) {
   if ([GTKWidgetView_gtk_loop_queue count] == 0) return 1;
 
   NSLog(@"exec");
+  [GTKWidgetView_gtk_loop_queue_lock lock];
   for (void (^func)(void) in GTKWidgetView_gtk_loop_queue) {
     func();
   }
-
   [GTKWidgetView_gtk_loop_queue removeAllObjects];
+  [GTKWidgetView_gtk_loop_queue_lock unlock];
+  
   gdk_threads_add_timeout(100, handler_idle, NULL);
 
   return 1;
@@ -59,40 +62,35 @@ gint handler_focus_event(GtkWidget* widget, GdkEventButton* evt, gpointer func_d
 
 @implementation GTKWidgetView
 
-- (void) viewDidMoveToWindow {
+- (void) createXWindow {
   [self startGTKEventLoop];
 
-  if ([self window]) {
-    if (!widget) {
-    [[NSNotificationCenter defaultCenter] addObserver:self 
-                                            selector:@selector(deactivateXWindow) 
-                                                name:NSWindowDidResignKeyNotification
-                                              object:[self window]];
-    [self executeInGTK:^{
-      [self createWidgetPlug];
-     }];
-    }
-  }
-  else {
-    if (widget) {
-      [self destroyWidgets];
-      NSLog(@"close");
-    }
-  }
+  [self executeInGTK:^{
+    [self createWidgetPlug];
+  }];
+}
+
+- (void) destroyXWindow {
+  [self destroyWidget];
+  [super destroyXWindow];
 }
 
 - (void) executeInGTK:(void (^)(void)) block {
   NSLog(@"queue");
+  [GTKWidgetView_gtk_loop_queue_lock lock];
   [GTKWidgetView_gtk_loop_queue addObject:block];
+  [GTKWidgetView_gtk_loop_queue_lock unlock];
 }
 
-- (GtkWidget*) createWidget {
+- (GtkWidget*) createWidgetForGTK {
   return NULL;
 }
 
 - (void) startGTKEventLoop {
   if (GTKWidgetView_gtk_loop_queue) return;
+  
   GTKWidgetView_gtk_loop_queue = [[NSMutableArray alloc] init];
+  GTKWidgetView_gtk_loop_queue_lock = [[NSLock alloc] init];
   
   [NSThread detachNewThreadSelector:@selector(GTKEventLoopProcess) toTarget:self withObject:nil];
 }
@@ -113,7 +111,7 @@ gint handler_focus_event(GtkWidget* widget, GdkEventButton* evt, gpointer func_d
   //GtkWidget *main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   //gtk_window_set_default_size(GTK_WINDOW(main_window), 800, 600);
      
-   GtkWidget *widget = [self createWidget];
+   GtkWidget *widget = [self createWidgetForGTK];
    gtk_container_add(GTK_CONTAINER(plug), GTK_WIDGET(widget));
      
    g_signal_connect(G_OBJECT(widget), "button-press-event", G_CALLBACK(handler_focus_event), self);
@@ -129,11 +127,16 @@ gint handler_focus_event(GtkWidget* widget, GdkEventButton* evt, gpointer func_d
    [self performSelectorOnMainThread:@selector(remapXWindow:) withObject:xwin waitUntilDone:NO];
 }
 
-- (void) destroyWidgets {
+- (void) destroyWidget {
+  NSLog(@"destroy widget");
+  if (plug) {
+    gtk_window_close(plug); // should probably be called from the GTK thread
+    // this is a bit hacky, but it seems to be the only way to give GTK chance to close the window normaly
+    [NSThread sleepForTimeInterval:0.1]; //postpone the main loop for a bit
+  }
+  
   widget = NULL;
   plug = NULL;
-  
-  [self unmapXWindow];
 }
 
 

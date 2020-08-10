@@ -17,7 +17,15 @@
   return self;
 }
 
-- (GtkWidget*) createWidget {
+- (void) setDelegate:(id) del {
+  delegate = del;
+}
+  
+- (id) delegate {
+  return delegate;
+}
+
+- (GtkWidget*) createWidgetForGTK {
   NSLog(@"createWidget");
   
   webView = WEBKIT_WEB_VIEW(webkit_web_view_new());

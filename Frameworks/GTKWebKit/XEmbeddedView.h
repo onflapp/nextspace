@@ -34,6 +34,8 @@
   Window xwindowid;
 }
 
+- (void) createXWindow;
+- (void) destroyXWindow;
 - (void) activateXWindow;
 - (void) deactivateXWindow;
 - (void) remapXWindow:(Window) xwin;

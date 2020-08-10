@@ -4,7 +4,12 @@
 #import <AppKit/AppKit.h>
 #import "GTKWidgetView.h"
 
-@interface GTKWebView : GTKWidgetView
+@interface GTKWebView : GTKWidgetView {
+  IBOutlet id delegate;
+}
+
+- (void) setDelegate:(id) del;
+- (id) delegate;
 
 - (void) loadURL:(NSURL*) url;
 

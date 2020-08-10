@@ -34,6 +34,39 @@
   return self;
 }
 
+- (void) viewDidMoveToWindow {
+  if ([self window]) {
+    if (xwindowid == 0) {
+      [[NSNotificationCenter defaultCenter] addObserver:self 
+                                              selector:@selector(deactivateXWindow) 
+                                                  name:NSWindowDidResignKeyNotification
+                                                object:[self window]];
+                                               
+      [[NSNotificationCenter defaultCenter] addObserver:self 
+                                              selector:@selector(destroyXWindow) 
+                                                  name:NSWindowWillCloseNotification
+                                                object:[self window]];
+                                                
+      [self createXWindow];
+    }
+  }
+  else {
+    if (xwindowid != 0) {
+      [[NSNotificationCenter defaultCenter] removeObserver:self];
+      [self destroyXWindow];
+      //[self unmapXWindow];
+    }
+  }
+}
+
+- (void) createXWindow {
+}
+
+- (void) destroyXWindow {
+  NSLog(@"==== xxxx");
+  xwindowid = 0;
+}
+
 - (void) activateXWindow {
   NSWindow* win = [self window];
   if (!win) return;
