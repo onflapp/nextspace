@@ -5,7 +5,7 @@
 
    Author: root
 
-   Created: 2020-07-31 13:40:44 +0300 by root
+   Created: 2020-08-08 14:25:54 +0300 by root
 
    This application is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -22,15 +22,23 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111 USA.
 */
 
-#ifndef _GTKWIDGETVIEW_H_
-#define _GTKWIDGETVIEW_H_
+#ifndef _XEMBEDDEDVIEW_H_
+#define _XEMBEDDEDVIEW_H_
 
 #import <AppKit/AppKit.h>
-#import "XEmbeddedView.h"
+#include <X11/Xlib.h>
 
-@interface GTKWidgetView : XEmbeddedView
+@interface XEmbeddedView : NSView
+{
+  Display* xdisplay;
+  Window xwindowid;
+}
+
+- (void) activateXWindow;
+- (void) deactivateXWindow;
+- (void) remapXWindow:(Window) xwin;
 
 @end
 
-#endif // _GTKWIDGETVIEW_H_
+#endif // _XEMBEDDEDVIEW_H_
 

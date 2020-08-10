@@ -26,216 +26,115 @@
 #include <gtk/gtk.h>
 #include <gtk/gtkx.h>
 
-static BOOL gtkwdigets_gtk_initialized;
+NSMutableArray* GTKWidgetView_gtk_loop_queue;
+
+gint handler_idle(gpointer data) {
+  if ([GTKWidgetView_gtk_loop_queue count] == 0) return 1;
+
+  NSLog(@"exec");
+  for (void (^func)(void) in GTKWidgetView_gtk_loop_queue) {
+    func();
+  }
+
+  [GTKWidgetView_gtk_loop_queue removeAllObjects];
+  gdk_threads_add_timeout(100, handler_idle, NULL);
+
+  return 1;
+}
+
+gint handler_focus_event(GtkWidget* widget, GdkEventButton* evt, gpointer func_data) {
+  NSView* view = (NSView*)func_data;
+
+  [view performSelectorOnMainThread:@selector(activateXWindow) withObject:nil waitUntilDone:NO];
+  return 0;
+}
 
 @interface GTKWidgetView ()
 {
   GtkWidget* widget;
-  GtkWidget* gwindow;
-  Display* xdisplay;
-  Window xwindowid;
-  BOOL hasfocus;
+  GtkWidget* plug;
 }
 
 @end
 
-gint handler_realize(GtkWidget* widget, gpointer user)
-{
-  NSLog(@"realize");
-  gtk_widget_set_window(widget, (GdkWindow*)user);
-
-  return FALSE;
-}
-
-gint handler_event(GtkWidget* widget, GdkEventButton* evt, gpointer func_data) 
-{
-  NSView* view = (NSView*)func_data;
-  NSWindow* win = [view window];
-  
-  //[win makeKeyAndOrderFront:nil];
-  [win makeFirstResponder:view];
-
-  return FALSE;
-}
-
 @implementation GTKWidgetView
 
-+ (void) initialize
-{
-  if (!gtkwdigets_gtk_initialized) {
-    NSLog(@"GTKWidgetView: gtk_init called for the very first time");
-    gtk_init(NULL, 0);
-    gtkwdigets_gtk_initialized++;
-  }
-}
-
-- (id) initWithFrame:(NSRect)r 
-{
-  self = [super initWithFrame:r];
-  
-  xwindowid = -1;
-  
-  return self;
-}
-
-- (void) dealloc
-{
-  [super dealloc];
-}
-
-- (GtkWidget*) createWidget
-{
-  return NULL;
-}
-
 - (void) viewDidMoveToWindow {
+  [self startGTKEventLoop];
+
   if ([self window]) {
-    if (!widget) { 
-      widget = [self createWidget];
-      [self mapWidgetToWindow];
+    if (!widget) {
+    [[NSNotificationCenter defaultCenter] addObserver:self 
+                                            selector:@selector(deactivateXWindow) 
+                                                name:NSWindowDidResignKeyNotification
+                                              object:[self window]];
+    [self executeInGTK:^{
+      [self createWidgetPlug];
+     }];
     }
   }
   else {
     if (widget) {
-      [self unmapWidgetFromWindow];
-      widget = NULL;
-      xwindowid = 0;
+      [self destroyWidgets];
+      NSLog(@"close");
     }
   }
 }
 
-- (BOOL) acceptsFirstResponder
-{
-  return YES;
+- (void) executeInGTK:(void (^)(void)) block {
+  NSLog(@"queue");
+  [GTKWidgetView_gtk_loop_queue addObject:block];
 }
 
-- (BOOL) becomeFirstResponder
-{
-  if (widget) {
-    if (!hasfocus) {
-      XSetInputFocus(xdisplay, xwindowid, RevertToNone, CurrentTime);
-      hasfocus = TRUE;
-    }
-  }
-  return TRUE;
+- (GtkWidget*) createWidget {
+  return NULL;
 }
 
-- (BOOL) resignFirstResponder
-{
-  hasfocus = FALSE;
-  return TRUE;
+- (void) startGTKEventLoop {
+  if (GTKWidgetView_gtk_loop_queue) return;
+  GTKWidgetView_gtk_loop_queue = [[NSMutableArray alloc] init];
+  
+  [NSThread detachNewThreadSelector:@selector(GTKEventLoopProcess) toTarget:self withObject:nil];
 }
 
-- (void) resizeWithOldSuperviewSize:(NSSize) sz
-{
-  [super resizeWithOldSuperviewSize:sz];
-
-  if (!widget) return;
-  if (!xwindowid) return;
-  if (![self window]) return;
-
-  NSRect r = [self convertToNativeWindowRect];
+- (void) GTKEventLoopProcess {
+  NSLog(@"start");
+  gtk_init(0, NULL);
   
-  XMoveResizeWindow(xdisplay, xwindowid, r.origin.x, r.origin.y, r.size.width, r.size.height);
+  gdk_threads_add_timeout(100, handler_idle, NULL);
+  gtk_main();
+  
+  NSLog(@"end");
 }
 
-- (NSRect) convertToNativeWindowRect
-{
-  NSRect r = [self convertRect:[self bounds] toView:nil];
-  NSInteger x = (NSInteger)r.origin.x;
-  NSInteger y = (NSInteger)r.origin.y;
-  NSInteger w = (NSInteger)r.size.width;
-  NSInteger h = (NSInteger)r.size.height;
-  
-  y = [[[self window] contentView] bounds].size.height - r.size.height - r.origin.y;
-  y += 10;
-  
-  return NSMakeRect(x, y, w, h);
-}
-
-- (void) drawRect:(NSRect)r {
-  [[NSColor redColor] setFill];
-  NSRectFill(r);
-}
-
-- (void) mapWidgetToWindow 
-{
-  if (!widget) return;
-  if (![self window]) return;
-
-  Window xw = (Window)[[self window]windowRef];
-  GdkDisplay* gd = gdk_display_get_default();
-  Display* xd = gdk_x11_display_get_xdisplay(gd);
-
-  GtkWidget* main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  gtk_widget_realize(main_window);
-
-  GdkWindow* gw = gtk_widget_get_window(main_window);
-  
-  /*
-  int xs = DefaultScreen(xd);
-  Window xxw = XCreateSimpleWindow(xd, RootWindow(xd, xs), 10, 10, 100, 100, 1, BlackPixel(xd, xs), WhitePixel(xd, xs));
-  XMapWindow(xd, xxw);
-
-  GdkWindow* gw = gdk_x11_window_foreign_new_for_display(gd, xxw);
-  GtkWidget* main_window = gtk_widget_new(GTK_TYPE_WINDOW, NULL);
-  
-  g_signal_connect(main_window, "realize", G_CALLBACK(handler_realize), gw);
-  gtk_widget_set_has_window(main_window, TRUE);
-  
-  gtk_widget_realize(main_window);
-  [self startProcessingEvents];
-  */
-  
-  gtk_container_add(GTK_CONTAINER(main_window), GTK_WIDGET(widget));
-
-  Window xid = gdk_x11_window_get_xid(gw);
-  
-  NSRect r = [self convertToNativeWindowRect];
-  
-  XReparentWindow(xd, xid, xw, r.origin.x, r.origin.y);
-  XResizeWindow(xd, xid, r.size.width, r.size.height);
-  XFlush(xd);
- 
-  gwindow = main_window; 
-  xdisplay = xd;
-  xwindowid = xid;
-
-  g_signal_connect(G_OBJECT(widget), "button-press-event", G_CALLBACK(handler_event), self);
-  
-  gtk_widget_show_all(main_window);
+- (void) createWidgetPlug {        
+  plug = gtk_plug_new(0);
     
-  [self startProcessingEvents];
-}
-
-- (void) unmapWidgetFromWindow {
-  if (!widget) return;
+  //GtkWidget *main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  //gtk_window_set_default_size(GTK_WINDOW(main_window), 800, 600);
+     
+   GtkWidget *widget = [self createWidget];
+   gtk_container_add(GTK_CONTAINER(plug), GTK_WIDGET(widget));
+     
+   g_signal_connect(G_OBJECT(widget), "button-press-event", G_CALLBACK(handler_focus_event), self);
+     
+   gtk_widget_show_all(plug);
+    
+   Window xwin = gtk_plug_get_id(plug);
+     
+   //GdkWindow* gw = gtk_widget_get_window(main_window);
+   //Window xwin = gdk_x11_window_get_xid(gw);
   
-  //XDestroyWindow(xdisplay, xwindowid);
+   NSLog(@"xwin:%x", xwin);
+   [self performSelectorOnMainThread:@selector(remapXWindow:) withObject:xwin waitUntilDone:NO];
+}
+
+- (void) destroyWidgets {
+  widget = NULL;
+  plug = NULL;
   
-  [self processPendingEvents];
-  
-  //GtkWidget* main_window = gtk_widget_get_parent_window(widget);
-  //gtk_window_close(main_window);
+  [self unmapXWindow];
 }
 
-- (void) processPendingEvents {
-  while(gtk_events_pending()) {
-    gtk_main_iteration();
-  }
-}
-
-- (void) startProcessingEvents
-{
-  while(gtk_events_pending()) 
-  {
-    gtk_main_iteration();
-  }
-  [self performSelector:@selector(startProcessingEvents) withObject:nil afterDelay:0.1];  
-}
-
-- (void) stopProcessingEvents
-{
-}
 
 @end

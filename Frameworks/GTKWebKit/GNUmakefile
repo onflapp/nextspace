@@ -25,14 +25,25 @@ GTKWebKit_DEPLOY_WITH_CURRENT_VERSION = yes
 GTKWebKit_HEADER_FILES = \
 GTKWebKit.h \
 GTKWebView.h \
-GTKWidgetView.h 
+GTKWidgetView.h \
+XEmbeddedView.h \
+xembed.h 
 
 #
 # Class files
 #
 GTKWebKit_OBJC_FILES = \
 GTKWebView.m \
-GTKWidgetView.m
+GTKWidgetView.m \
+XEmbeddedView.m
+
+#
+# Other sources
+#
+GTKWebKit_C_FILES = \
+xembed.c 
+
+
 
 #
 # Makefiles

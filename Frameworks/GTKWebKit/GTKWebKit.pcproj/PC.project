@@ -7,9 +7,11 @@
 	distclean,
 	dist
     );
+    "BUILDER_VERBOSE" = YES;
     "CLASS_FILES" = (
 	"GTKWebView.m",
-	"GTKWidgetView.m"
+	"GTKWidgetView.m",
+	"XEmbeddedView.m"
     );
     COMPILEROPTIONS = "";
     CPPOPTIONS = "";
@@ -22,7 +24,9 @@
     "HEADER_FILES" = (
 	"GTKWebKit.h",
 	"GTKWebView.h",
-	"GTKWidgetView.h"
+	"GTKWidgetView.h",
+	"XEmbeddedView.h",
+	"xembed.h"
     );
     IMAGES = (
     );
@@ -40,6 +44,7 @@
     "OTHER_RESOURCES" = (
     );
     "OTHER_SOURCES" = (
+	"xembed.c"
     );
     "PROJECT_AUTHORS" = (
     );
@@ -57,7 +62,9 @@
     "PUBLIC_HEADERS" = (
 	"GTKWebKit.h",
 	"GTKWebView.h",
-	"GTKWidgetView.h"
+	"GTKWidgetView.h",
+	"XEmbeddedView.h",
+	"xembed.h"
     );
     "SEARCH_HEADER_DIRS" = (
     );
