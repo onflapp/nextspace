@@ -39,3 +39,4 @@ libxft-dev
 libxpm-dev
 libssl-dev
 libart-2.0-dev
+webkit2gtk-4.0-dev
