@@ -47,7 +47,7 @@
 
 - (void) applicationDidFinishLaunching: (NSNotification *)aNotif
 {
-
+  [NSApp setServicesProvider:self];
 }
 
 - (BOOL) applicationShouldTerminate: (id)sender
@@ -58,6 +58,16 @@
 - (void) applicationWillTerminate: (NSNotification *)aNotif
 {
 }
+- (void)openLocationService:(NSPasteboard *)pboard
+                     userData:(NSString *)userData
+                        error:(NSString **)error 
+{
+  NSString *path = [[pboard stringForType:NSStringPboardType] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\n\r"]];
+
+  if (path) {
+    [self application:NSApp openFile:path];
+  }
+}
 
 - (BOOL) application: (NSApplication *)application
             openFile: (NSString *)fileName
@@ -66,7 +76,7 @@
   if ([fileName hasPrefix:@"http"] || [fileName hasPrefix:@"file"]) {
     url = [NSURL URLWithString:fileName];
   }
-  else {
+  else if ([fileName hasPrefix:@"/"]) {
     url = [NSURL fileURLWithPath:fileName];
   }
   

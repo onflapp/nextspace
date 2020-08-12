@@ -10,10 +10,26 @@
     NSMainNibFile = "WebBrowser.gorm";
     NSPrincipalClass = NSApplication;
     NSRole = Application;
+    NSServices = (
+	{
+	    NSKeyEquivalent = {
+		default = O;
+	    };
+	    NSMenuItem = {
+		default = "WebBrowser/Open Location";
+	    };
+	    NSMessage = openLocationService;
+	    NSPortName = WebBrowser;
+	    NSSendTypes = (
+		NSStringPboardType
+	    );
+	}
+    );
     NSTypes = (
 	{
+	    NSIcon = "html.tiff";
 	    NSUnixExtensions = (
-		""
+		html
 	    );
 	}
     );

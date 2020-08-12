@@ -61,8 +61,9 @@
     "PROJECT_DESCRIPTION" = "No description avaliable!";
     "PROJECT_DOCUMENTTYPES" = (
 	{
+	    NSIcon = "html.tiff";
 	    NSUnixExtensions = (
-		""
+		html
 	    );
 	}
     );
@@ -83,7 +84,8 @@
 	"GNUmakefile.preamble",
 	GNUmakefile,
 	"GNUmakefile.postamble",
-	"WebBrowserInfo.plist"
+	"WebBrowserInfo.plist",
+	"Info.plist"
     );
     "USER_LANGUAGES" = (
 	English,
