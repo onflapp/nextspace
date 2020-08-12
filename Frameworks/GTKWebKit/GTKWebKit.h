@@ -3,7 +3,7 @@
 
    Copyright (C) 2020 Free Software Foundation
 
-   Author: root
+   Author: onflapp
 
    Created: 2020-08-02 13:09:18 +0300 by root
 

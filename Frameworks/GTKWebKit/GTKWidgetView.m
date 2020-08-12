@@ -34,7 +34,6 @@ gint handler_idle(gpointer data) {
 
   if ([GTKWidgetView_gtk_loop_queue count] > 0) {
 
-    NSLog(@"exec");
     for (void (^func)(void) in GTKWidgetView_gtk_loop_queue) {
       func();
     }
@@ -104,13 +103,10 @@ gint handler_focus_event(GtkWidget* widget, GdkEventButton* evt, gpointer func_d
 }
 
 - (void) GTKEventLoopProcess {
-  NSLog(@"start");
   gtk_init(0, NULL);
   
   gdk_threads_add_timeout(100, handler_idle, NULL);
   gtk_main();
-  
-  NSLog(@"end");
 }
 
 - (void) createWidgetPlug {        
@@ -131,12 +127,10 @@ gint handler_focus_event(GtkWidget* widget, GdkEventButton* evt, gpointer func_d
    //GdkWindow* gw = gtk_widget_get_window(main_window);
    //Window xwin = gdk_x11_window_get_xid(gw);
   
-   NSLog(@"xwin:%x", xwin);
    [self performSelectorOnMainThread:@selector(remapXWindow:) withObject:[NSNumber numberWithInteger:xwin] waitUntilDone:NO];
 }
 
 - (void) destroyWidget {
-  NSLog(@"destroy widget");
   if (plug) {
     gtk_window_close(plug); // should probably be called from the GTK thread
     // this is a bit hacky, but it seems to be the only way to give GTK chance to close the window normaly

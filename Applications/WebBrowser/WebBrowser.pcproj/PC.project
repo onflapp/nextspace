@@ -27,6 +27,12 @@
 	"Document.h"
     );
     IMAGES = (
+	"Home.tiff",
+	"Left.tiff",
+	"Right.tiff",
+	"LeftX.tiff",
+	"Link.tiff",
+	"RightX.tiff"
     );
     INSTALLDIR = "$(HOME)/GNUstep";
     INTERFACES = (

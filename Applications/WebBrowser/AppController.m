@@ -1,7 +1,7 @@
 /* 
    Project: WebBrowser
 
-   Author: root
+   Author: onflapp
 
    Created: 2020-07-22 12:15:43 +0300 by root
    

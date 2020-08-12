@@ -4,6 +4,14 @@
 #import <AppKit/AppKit.h>
 #import "GTKWidgetView.h"
 
+@protocol GTKWebViewDelegate
+
+- (void) webView:(id)webView didStartLoading:(NSURL*) url;
+- (void) webView:(id)webView didFinishLoading:(NSURL*) url;
+- (void) webView:(id)webView didChangeTitle:(NSString*) title;
+
+@end
+
 @interface GTKWebView : GTKWidgetView {
   IBOutlet id delegate;
 }

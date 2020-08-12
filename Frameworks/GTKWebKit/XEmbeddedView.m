@@ -63,7 +63,6 @@
 }
 
 - (void) destroyXWindow {
-  NSLog(@"==== xxxx");
   xwindowid = 0;
   xdisplay = NULL;
 }
@@ -85,12 +84,10 @@
 }
 
 - (BOOL) acceptsFirstResponder {
-    NSLog(@"- accept");
     return YES;
 }
 
 - (BOOL) becomeFirstResponder {
-  NSLog(@"- become");
   if (xdisplay && xwindowid) {
     sendxembed(xdisplay, xwindowid, XEMBED_FOCUS_IN, XEMBED_FOCUS_CURRENT, 0, 0);
     sendxembed(xdisplay, xwindowid, XEMBED_WINDOW_ACTIVATE, 0, 0, 0);
@@ -100,7 +97,6 @@
 }
 
 - (BOOL) resignFirstResponder {
-  NSLog(@"- resign");
   if (xdisplay && xwindowid) {
     sendxembed(xdisplay, xwindowid, XEMBED_FOCUS_OUT, XEMBED_FOCUS_CURRENT, 0, 0);
     sendxembed(xdisplay, xwindowid, XEMBED_WINDOW_DEACTIVATE, 0, 0, 0);
@@ -118,7 +114,6 @@
   if (!xwindowid || !xdisplay) return;
   if (![self window]) return;
 
-  NSLog(@"resize");
   NSRect r = [self convertToNativeWindowRect];
   
   XMoveResizeWindow(xdisplay, xwindowid, r.origin.x, r.origin.y, r.size.width, r.size.height);
@@ -158,7 +153,6 @@
   XFlush(xdisplay);
   xdisplay = NULL;
   xwindowid = 0;
-  NSLog(@"unmapped");
 }
 
 - (void) remapXWindow:(NSNumber*) xwin {  
@@ -166,8 +160,6 @@
   xdisplay = XOpenDisplay(NULL);
   xwindowid = [xwin integerValue];
   
-  NSLog(@"%x - %x -> %x", xdisplay, xwindowid, myxwindowid);
-    
   XReparentWindow(xdisplay, xwindowid, myxwindowid, 0, 0);
   XMapWindow(xdisplay, xwindowid); 
   

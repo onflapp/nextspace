@@ -28,6 +28,8 @@
 #import <AppKit/AppKit.h>
 #import "XEmbeddedView.h"
 
+#define GCHAR2NSSTRING(s) [[[NSString alloc]initWithUTF8String:s]autorelease]
+
 @interface GTKWidgetView : XEmbeddedView
 
 - (void) executeInGTK:(void (^)(void)) block;

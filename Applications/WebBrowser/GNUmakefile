@@ -27,7 +27,13 @@ Resources/WebBrowser.gorm \
 Resources/Main.gsmarkup \
 Resources/MainMenu-GNUstep.gsmarkup \
 Resources/MainMenu-OSX.gsmarkup \
-Resources/Document.gorm 
+Resources/Document.gorm \
+Resources/Home.tiff \
+Resources/Left.tiff \
+Resources/Right.tiff \
+Resources/LeftX.tiff \
+Resources/Link.tiff \
+Resources/RightX.tiff 
 
 
 #

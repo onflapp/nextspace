@@ -3,7 +3,7 @@
 
    Copyright (C) 2020 Free Software Foundation
 
-   Author: root
+   Author: onflapp
 
    Created: 2020-07-22 12:41:08 +0300 by root
 
@@ -33,6 +33,7 @@
   IBOutlet NSWindow *window;
   IBOutlet GTKWebView* webView;
   IBOutlet NSTextField* addressField;
+  IBOutlet NSTextField* statusField;
 }
 
 - (void) loadLocation:(id) sender;

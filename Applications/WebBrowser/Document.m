@@ -3,7 +3,7 @@
 
    Copyright (C) 2020 Free Software Foundation
 
-   Author: root
+   Author: onflapp
 
    Created: 2020-07-22 12:41:08 +0300 by root
 
@@ -38,13 +38,15 @@
       break;
     }
   }
+
+  [webView setDelegate:self];
   
   [window makeKeyAndOrderFront:self];
   return self;
 }
 
 - (void) goHome:(id) sender {
-  NSURL* url = [[NSURL alloc] initWithString:@"https://www.x.org"];
+  NSURL* url = [NSURL URLWithString:@"https://github.com/trunkmaster/nextspace"];
   
   [self setURL:url];
 }
@@ -69,10 +71,28 @@
   else {
     val = [val stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSString* search = [NSString stringWithFormat:@"https://www.google.com/search?q=%@", val];
-    url = [[NSURL alloc] initWithString:search];
+    url = [NSURL URLWithString:search];
   }
   
   [self setURL:url];
+}
+
+- (void) webView:(id)webView didStartLoading:(NSURL*) url {
+  [statusField setStringValue:[NSString stringWithFormat:@"loading %@", url]];
+}
+
+- (void) webView:(id)webView didFinishLoading:(NSURL*) url {
+  [addressField setStringValue:[url description]];
+  [statusField setStringValue:@""];
+}
+
+- (void) webView:(id)webView didChangeTitle:(NSString*) title {
+  if (title) {
+    [window setTitle:title];
+  }
+  else {
+    [window setTitle:@"Unknown"];
+  }
 }
 
 @end
