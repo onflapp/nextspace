@@ -30,6 +30,8 @@
 
 @interface GTKWidgetView : XEmbeddedView
 
+- (void) executeInGTK:(void (^)(void)) block;
+
 @end
 
 #endif // _GTKWIDGETVIEW_H_

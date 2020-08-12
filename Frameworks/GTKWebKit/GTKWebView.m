@@ -23,7 +23,7 @@ static void handle_view_load_changed (WebKitWebView  *web_view,
          * the final one and it won't change unless a new
          * load is requested or a navigation within the
          * same page is performed */
-        gchar* uri = webkit_web_view_get_uri (web_view);
+        //gchar* uri = webkit_web_view_get_uri (web_view);
         break;
     case WEBKIT_LOAD_FINISHED:
         /* Load finished, we can now stop the spinner */
@@ -67,6 +67,30 @@ static void handle_view_load_changed (WebKitWebView  *web_view,
   [self executeInGTK:^{
     webkit_web_view_load_uri(webView, [[url description] cString]);
   }];
+}
+
+- (id)validRequestorForSendType:(NSString *)st
+                     returnType:(NSString *)rt 
+{
+  if ([st isEqual:NSStringPboardType])
+    return self;
+  else
+    return nil;
+}
+
+- (BOOL)writeSelectionToPasteboard:(NSPasteboard *)pb
+                             types:(NSArray *)types
+{
+  NSString *sel = @"TBD";
+
+  if (sel) {
+    [pb declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
+    [pb setString:sel forType:NSStringPboardType];
+    return YES;
+  }
+  else {
+    return NO;
+  }
 }
 
 - (void) copy:(id)sender {

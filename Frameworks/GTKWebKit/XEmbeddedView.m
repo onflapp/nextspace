@@ -65,6 +65,7 @@
 - (void) destroyXWindow {
   NSLog(@"==== xxxx");
   xwindowid = 0;
+  xdisplay = NULL;
 }
 
 - (void) activateXWindow {
@@ -110,7 +111,10 @@
 
 - (void) resizeWithOldSuperviewSize:(NSSize) sz {
   [super resizeWithOldSuperviewSize:sz];
+  [self resizeXWindow];
+}
 
+- (void) resizeXWindow {
   if (!xwindowid || !xdisplay) return;
   if (![self window]) return;
 
@@ -157,20 +161,17 @@
   NSLog(@"unmapped");
 }
 
-- (void) remapXWindow:(Window) xwin {  
-  Window myxwindowid = [[self window]windowRef];
+- (void) remapXWindow:(NSNumber*) xwin {  
+  Window myxwindowid = (Window)[[self window]windowRef];
   xdisplay = XOpenDisplay(NULL);
-  xwindowid = xwin;
-  
-  NSRect r = [self convertToNativeWindowRect];
+  xwindowid = [xwin integerValue];
   
   NSLog(@"%x - %x -> %x", xdisplay, xwindowid, myxwindowid);
     
-  XReparentWindow(xdisplay, xwindowid, myxwindowid, r.origin.x, r.origin.y);
-  XFlush(xdisplay);
-  XResizeWindow(xdisplay, xwindowid, r.size.width, r.size.height);
+  XReparentWindow(xdisplay, xwindowid, myxwindowid, 0, 0);
   XMapWindow(xdisplay, xwindowid); 
-  XFlush(xdisplay);
+  
+  [self performSelector:@selector(resizeXWindow) withObject:nil afterDelay:0.1];
 }
 
 @end

@@ -38,7 +38,7 @@
 - (void) destroyXWindow;
 - (void) activateXWindow;
 - (void) deactivateXWindow;
-- (void) remapXWindow:(Window) xwin;
+- (void) remapXWindow:(NSNumber*) xwin;
 
 @end
 

@@ -30,18 +30,18 @@ NSMutableArray* GTKWidgetView_gtk_loop_queue;
 NSLock* GTKWidgetView_gtk_loop_queue_lock;
 
 gint handler_idle(gpointer data) {
-  if ([GTKWidgetView_gtk_loop_queue count] == 0) return 1;
-
-  NSLog(@"exec");
   [GTKWidgetView_gtk_loop_queue_lock lock];
-  for (void (^func)(void) in GTKWidgetView_gtk_loop_queue) {
-    func();
+
+  if ([GTKWidgetView_gtk_loop_queue count] > 0) {
+
+    NSLog(@"exec");
+    for (void (^func)(void) in GTKWidgetView_gtk_loop_queue) {
+      func();
+    }
+    [GTKWidgetView_gtk_loop_queue removeAllObjects];
   }
-  [GTKWidgetView_gtk_loop_queue removeAllObjects];
   [GTKWidgetView_gtk_loop_queue_lock unlock];
   
-  gdk_threads_add_timeout(100, handler_idle, NULL);
-
   return 1;
 }
 
@@ -62,6 +62,15 @@ gint handler_focus_event(GtkWidget* widget, GdkEventButton* evt, gpointer func_d
 
 @implementation GTKWidgetView
 
+- (id) initWithFrame:(NSRect)r {
+  self = [super initWithFrame:r];
+  widget = NULL;
+  plug = NULL;
+  
+  
+  return self;
+}
+
 - (void) createXWindow {
   [self startGTKEventLoop];
 
@@ -76,7 +85,6 @@ gint handler_focus_event(GtkWidget* widget, GdkEventButton* evt, gpointer func_d
 }
 
 - (void) executeInGTK:(void (^)(void)) block {
-  NSLog(@"queue");
   [GTKWidgetView_gtk_loop_queue_lock lock];
   [GTKWidgetView_gtk_loop_queue addObject:block];
   [GTKWidgetView_gtk_loop_queue_lock unlock];
@@ -124,7 +132,7 @@ gint handler_focus_event(GtkWidget* widget, GdkEventButton* evt, gpointer func_d
    //Window xwin = gdk_x11_window_get_xid(gw);
   
    NSLog(@"xwin:%x", xwin);
-   [self performSelectorOnMainThread:@selector(remapXWindow:) withObject:xwin waitUntilDone:NO];
+   [self performSelectorOnMainThread:@selector(remapXWindow:) withObject:[NSNumber numberWithInteger:xwin] waitUntilDone:NO];
 }
 
 - (void) destroyWidget {
