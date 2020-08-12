@@ -36,6 +36,7 @@
 }
 
 - (void) loadLocation:(id) sender;
+- (void) setURL:(NSURL*) url;
 
 @end
 

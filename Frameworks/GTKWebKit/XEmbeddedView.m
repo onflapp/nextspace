@@ -90,18 +90,21 @@
 
 - (BOOL) becomeFirstResponder {
   NSLog(@"- become");
-  sendxembed(xdisplay, xwindowid, XEMBED_FOCUS_IN, XEMBED_FOCUS_CURRENT, 0, 0);
-  sendxembed(xdisplay, xwindowid, XEMBED_WINDOW_ACTIVATE, 0, 0, 0);
-  XFlush(xdisplay);
-  
+  if (xdisplay && xwindowid) {
+    sendxembed(xdisplay, xwindowid, XEMBED_FOCUS_IN, XEMBED_FOCUS_CURRENT, 0, 0);
+    sendxembed(xdisplay, xwindowid, XEMBED_WINDOW_ACTIVATE, 0, 0, 0);
+    XFlush(xdisplay);
+  }
   return YES;
 }
 
 - (BOOL) resignFirstResponder {
   NSLog(@"- resign");
-  sendxembed(xdisplay, xwindowid, XEMBED_FOCUS_OUT, XEMBED_FOCUS_CURRENT, 0, 0);
-  sendxembed(xdisplay, xwindowid, XEMBED_WINDOW_DEACTIVATE, 0, 0, 0);
-  XFlush(xdisplay);
+  if (xdisplay && xwindowid) {
+    sendxembed(xdisplay, xwindowid, XEMBED_FOCUS_OUT, XEMBED_FOCUS_CURRENT, 0, 0);
+    sendxembed(xdisplay, xwindowid, XEMBED_WINDOW_DEACTIVATE, 0, 0, 0);
+    XFlush(xdisplay);
+  }
   return YES;
 }
 
@@ -119,7 +122,14 @@
 }
 
 - (NSRect) convertToNativeWindowRect {
-  NSRect r = [self convertRect:[self bounds] toView:nil];
+  NSRect r = [self bounds];
+  NSView* sv = [self superview];
+  while (sv) {
+    NSRect sr = [sv bounds];
+    r.origin.x += sr.origin.x;
+    r.origin.y += sr.origin.y;
+    sv = [sv superview];
+  }
   NSInteger x = (NSInteger)r.origin.x;
   NSInteger y = (NSInteger)r.origin.y;
   NSInteger w = (NSInteger)r.size.width;
@@ -130,10 +140,12 @@
   return NSMakeRect(x, y, w, h);
 }
 
+/*
 - (void) drawRect:(NSRect)r {
   [[NSColor redColor] setFill];
   NSRectFill(r);
 }
+*/
 
 - (void) unmapXWindow {
   if (!xdisplay || !xwindowid) return;

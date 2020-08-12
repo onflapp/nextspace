@@ -39,16 +39,21 @@
     }
   }
   
+  [window makeKeyAndOrderFront:self];
   return self;
 }
 
 - (void) goHome:(id) sender {
-  NSString* url = [[NSURL alloc] initWithString:@"https://www.x.org"];
+  NSURL* url = [[NSURL alloc] initWithString:@"https://www.x.org"];
   
-  if (url) {
-    [addressField setStringValue:[url description]];
-    [webView loadURL:url];
-  }
+  [self setURL:url];
+}
+
+- (void) setURL:(NSURL*) url {
+  if (!url) return;
+  
+  [webView loadURL:url];
+  [addressField setStringValue:[url description]];
 }
 
 - (void) loadLocation:(id) sender {
@@ -62,13 +67,12 @@
     url = [NSURL URLWithString:val];
   }
   else {
+    val = [val stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSString* search = [NSString stringWithFormat:@"https://www.google.com/search?q=%@", val];
     url = [[NSURL alloc] initWithString:search];
   }
   
-  if (url) {
-    [webView loadURL:url];
-  }
+  [self setURL:url];
 }
 
 @end

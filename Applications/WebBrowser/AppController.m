@@ -62,6 +62,19 @@
 - (BOOL) application: (NSApplication *)application
             openFile: (NSString *)fileName
 {
+  NSURL* url = nil;
+  if ([fileName hasPrefix:@"http"] || [fileName hasPrefix:@"file"]) {
+    url = [NSURL URLWithString:fileName];
+  }
+  else {
+    url = [NSURL fileURLWithPath:fileName];
+  }
+  
+  if (url) {
+    Document* doc = [[Document alloc] init];
+    [doc setURL:url];
+  }
+  
   return NO;
 }
 
