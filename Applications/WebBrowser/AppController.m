@@ -18,7 +18,7 @@
   NSMutableDictionary* defaults = [NSMutableDictionary dictionary];
   NSMutableDictionary* webview = [NSMutableDictionary dictionary];
   
-  [webview setValue:@"xxx" forKey:@"USER_AGENT"];
+  [webview setValue:@"" forKey:@"USER_AGENT"];
   
   [defaults setValue:webview forKey:@"WEBVIEW"];
   [defaults setValue:@"https://www.google.com/search?q=" forKey:@"SEARCH_ADDRESS"];
