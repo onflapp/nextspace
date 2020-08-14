@@ -27,7 +27,8 @@ GTKWebKit.h \
 GTKWebView.h \
 GTKWidgetView.h \
 XEmbeddedView.h \
-xembed.h 
+xembed.h \
+GTKWebViewSettings.h 
 
 #
 # Class files
@@ -35,7 +36,8 @@ xembed.h
 GTKWebKit_OBJC_FILES = \
 GTKWebView.m \
 GTKWidgetView.m \
-XEmbeddedView.m
+XEmbeddedView.m \
+GTKWebViewSettings.m
 
 #
 # Other sources

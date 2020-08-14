@@ -3,6 +3,7 @@
 
 #import <AppKit/AppKit.h>
 #import "GTKWidgetView.h"
+#import "GTKWebViewSettings.h"
 
 @protocol GTKWebViewDelegate
 

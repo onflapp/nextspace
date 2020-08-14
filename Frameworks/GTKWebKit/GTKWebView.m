@@ -86,6 +86,13 @@ static void handle_view_load_changed (WebKitWebView  *web_view,
   }
 }
 
+@interface GTKWebViewSettings (GTKWidget)
+
+- (void) applyToGTKWebKitView:(WebKitWebView*) webview;
+- (void) loadFromGTKWebKitView:(WebKitWebView*) webview;
+
+@end
+
 @interface GTKWebView ()
 {
   WebKitWebView* webView;
@@ -102,7 +109,7 @@ static void handle_view_load_changed (WebKitWebView  *web_view,
 - (void) setDelegate:(id) del {
   delegate = del;
 }
-  
+
 - (id) delegate {
   return delegate;
 }
@@ -120,6 +127,13 @@ static void handle_view_load_changed (WebKitWebView  *web_view,
   if (!url) return;
  
   [self executeInGTK:^{
+    GTKWebViewSettings* settings = [GTKWebViewSettings new];
+    [settings setDeveloperExtras:TRUE];
+     //[settings loadFromGTKWebKitView:webView];
+    [settings applyToGTKWebKitView:webView];
+     
+    //NSLog(@"settings: %@", settings);
+    
     webkit_web_view_load_uri(webView, [[url description] cString]);
   }];
 }

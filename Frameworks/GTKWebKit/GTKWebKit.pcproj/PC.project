@@ -11,7 +11,8 @@
     "CLASS_FILES" = (
 	"GTKWebView.m",
 	"GTKWidgetView.m",
-	"XEmbeddedView.m"
+	"XEmbeddedView.m",
+	"GTKWebViewSettings.m"
     );
     COMPILEROPTIONS = "";
     CPPOPTIONS = "";
@@ -26,7 +27,8 @@
 	"GTKWebView.h",
 	"GTKWidgetView.h",
 	"XEmbeddedView.h",
-	"xembed.h"
+	"xembed.h",
+	"GTKWebViewSettings.h"
     );
     IMAGES = (
     );
@@ -64,7 +66,8 @@
 	"GTKWebView.h",
 	"GTKWidgetView.h",
 	"XEmbeddedView.h",
-	"xembed.h"
+	"xembed.h",
+	"GTKWebViewSettings.h"
     );
     "SEARCH_HEADER_DIRS" = (
     );
