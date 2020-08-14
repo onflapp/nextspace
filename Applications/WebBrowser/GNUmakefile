@@ -28,6 +28,7 @@ Resources/Main.gsmarkup \
 Resources/MainMenu-GNUstep.gsmarkup \
 Resources/MainMenu-OSX.gsmarkup \
 Resources/Document.gorm \
+Resources/Preferences.gorm \
 Resources/Home.tiff \
 Resources/Left.tiff \
 Resources/Right.tiff \
@@ -41,14 +42,18 @@ Resources/RightX.tiff
 #
 WebBrowser_HEADER_FILES = \
 AppController.h \
-Document.h
+Document.h \
+Preferences.h \
+common.h
 
 #
 # Class files
 #
 WebBrowser_OBJC_FILES = \
 AppController.m \
-Document.m
+Document.m \
+Preferences.m \
+common.m
 
 #
 # Other sources

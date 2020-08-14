@@ -32,6 +32,8 @@
   NSMutableDictionary* _proxy;
 }
 
+- (void) mergeFromDictionary:(NSDictionary*) dict;
+
 - (void) setHardwareAccelerationPolicy:(NSInteger) val;
 - (NSInteger) hardwareAccelerationPolicy;
 

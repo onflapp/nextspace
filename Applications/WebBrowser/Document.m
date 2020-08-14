@@ -23,6 +23,7 @@
 */
 
 #import "Document.h"
+#import "common.h"
 
 @implementation Document
 - (id) init {
@@ -46,7 +47,7 @@
 }
 
 - (void) goHome:(id) sender {
-  NSURL* url = [NSURL URLWithString:@"https://github.com/trunkmaster/nextspace"];
+  NSURL* url = [NSURL URLWithString:[MYConfig valueForKey:@"HOME_ADDRESS"]];
   
   [self setURL:url];
 }
@@ -54,6 +55,7 @@
 - (void) setURL:(NSURL*) url {
   if (!url) return;
   
+  [[webView settings] mergeFromDictionary:[MYConfig valueForKey:@"WEBVIEW"]];
   [webView loadURL:url];
   [addressField setStringValue:[url description]];
 }
@@ -70,7 +72,7 @@
   }
   else {
     val = [val stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSString* search = [NSString stringWithFormat:@"https://www.google.com/search?q=%@", val];
+    NSString* search = [NSString stringWithFormat:@"%@%@", [MYConfig valueForKey:@"SEARCH_ADDRESS"], val];
     url = [NSURL URLWithString:search];
   }
   
@@ -83,7 +85,7 @@
 
 - (void) webView:(id)webView didFinishLoading:(NSURL*) url {
   [addressField setStringValue:[url description]];
-  [statusField setStringValue:@""];
+  [statusField setStringValue:[NSString stringWithFormat:@"%@ - loaded", [url host]]];
 }
 
 - (void) webView:(id)webView didChangeTitle:(NSString*) title {

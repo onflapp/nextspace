@@ -39,11 +39,42 @@
 }
 
 - (void) dealloc {
-  [_proxy release];
-  _proxy = nil;
+  RELEASE(_proxy);
   [super dealloc];
 }
 
+- (void) mergeFromDictionary:(NSDictionary*) dict {
+  for (NSString* key in [dict allKeys]) {
+    id val = [dict valueForKey:key];
+    if (val) {
+      [_proxy setValue:val forKey:key];
+    }
+  }
+}
+
+- (void) setUserAgent:(NSString*) val {
+  [_proxy setValue:val forKey:@"USER_AGENT"];
+}
+
+- (NSString*) userAgent {
+  return [_proxy valueForKey:@"USER_AGENT"];
+}
+
+- (void) setJavaScript:(BOOL) val {
+  [_proxy setValue:[NSNumber numberWithBool:val] forKey:@"JAVASCRIPT"];
+}
+
+- (BOOL) javaScript {
+  return [[_proxy valueForKey:@"JAVASCRIPT"] boolValue];
+}
+
+- (void) setMediaPlayback:(BOOL) val {
+  [_proxy setValue:[NSNumber numberWithBool:val] forKey:@"MEDIA_PLAYBACK"];
+}
+
+- (BOOL) mediaPlayback {
+  return [[_proxy valueForKey:@"MEDIA_PLAYBACK"] boolValue];
+}
 
 - (void) setDeveloperExtras:(BOOL) val {
   [_proxy setValue:[NSNumber numberWithBool:val] forKey:@"DEVELOPER_EXTRAS"];
@@ -64,18 +95,33 @@
 - (void) applyToGTKWebKitView:(WebKitWebView*) webview {
   WebKitSettings* settings = webkit_web_view_get_settings(webview);
   NSInteger apol = [self hardwareAccelerationPolicy];
-  NSLog(@">>> %@", self);
+
   if (apol == 2) {
     webkit_settings_set_hardware_acceleration_policy(settings, WEBKIT_HARDWARE_ACCELERATION_POLICY_ON_DEMAND);
+    webkit_settings_set_enable_accelerated_2d_canvas(settings, 1);
   }
   else if (apol == 1) {
     webkit_settings_set_hardware_acceleration_policy(settings, WEBKIT_HARDWARE_ACCELERATION_POLICY_ALWAYS);
+    webkit_settings_set_enable_accelerated_2d_canvas(settings, 1);
   }
   else {
     webkit_settings_set_hardware_acceleration_policy(settings, WEBKIT_HARDWARE_ACCELERATION_POLICY_NEVER);
+    webkit_settings_set_enable_accelerated_2d_canvas(settings, 0);
   }
-  
+
+  if ([[self userAgent] length] > 0) {
+    webkit_settings_set_user_agent(settings, [[self userAgent] cString]);
+  }
+    
   webkit_settings_set_enable_developer_extras(settings, [self developerExtras]);
+  webkit_settings_set_enable_javascript(settings, [self javaScript]);
+  webkit_settings_set_enable_media(settings, [self mediaPlayback]);
+  webkit_settings_set_enable_webaudio(settings, [self mediaPlayback]);
+
+  webkit_settings_set_enable_site_specific_quirks(settings, 1);
+  webkit_settings_set_enable_webgl(settings, 0);  
+  webkit_settings_set_enable_java(settings, 0);
+  webkit_settings_set_enable_plugins(settings, 0);
 }
 
 - (void) loadFromGTKWebKitView:(WebKitWebView*) webview {

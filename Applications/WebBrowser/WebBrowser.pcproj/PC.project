@@ -13,7 +13,9 @@
     "BUILDER_VERBOSE" = YES;
     "CLASS_FILES" = (
 	"AppController.m",
-	"Document.m"
+	"Document.m",
+	"Preferences.m",
+	"common.m"
     );
     COMPILEROPTIONS = "";
     CPPOPTIONS = "";
@@ -24,7 +26,9 @@
     );
     "HEADER_FILES" = (
 	"AppController.h",
-	"Document.h"
+	"Document.h",
+	"Preferences.h",
+	"common.h"
     );
     IMAGES = (
 	"Home.tiff",
@@ -40,7 +44,8 @@
 	"Main.gsmarkup",
 	"MainMenu-GNUstep.gsmarkup",
 	"MainMenu-OSX.gsmarkup",
-	"Document.gorm"
+	"Document.gorm",
+	"Preferences.gorm"
     );
     LANGUAGE = English;
     LIBRARIES = (

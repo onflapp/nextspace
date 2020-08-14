@@ -15,11 +15,13 @@
 
 @interface GTKWebView : GTKWidgetView {
   IBOutlet id delegate;
+  GTKWebViewSettings* _settings;
 }
 
 - (void) setDelegate:(id) del;
 - (id) delegate;
 
+- (GTKWebViewSettings*) settings;
 - (void) loadURL:(NSURL*) url;
 
 - (void) stopLoading:(id) sender;

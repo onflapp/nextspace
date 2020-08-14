@@ -13,9 +13,11 @@
 
 #import <AppKit/AppKit.h>
 #import "Document.h"
+#import "Preferences.h"
 
 @interface AppController : NSObject
 {
+  Preferences* preferences;
 }
 
 + (void)  initialize;

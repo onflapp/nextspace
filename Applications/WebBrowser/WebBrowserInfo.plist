@@ -23,6 +23,19 @@
 	    NSSendTypes = (
 		NSStringPboardType
 	    );
+	},
+	{
+	    NSKeyEquivalent = {
+		default = S;
+	    };
+	    NSMenuItem = {
+		default = "WebBrowser/Search Selection";
+	    };
+	    NSMessage = searchSelectionService;
+	    NSPortName = WebBrowser;
+	    NSSendTypes = (
+		NSStringPboardType
+	    );
 	}
     );
     NSTypes = (

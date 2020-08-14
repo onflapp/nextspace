@@ -103,7 +103,15 @@ static void handle_view_load_changed (WebKitWebView  *web_view,
 
 - (id) initWithFrame:(NSRect)r {
   self = [super initWithFrame:r];  
+  
+  _settings = [[GTKWebViewSettings alloc] init];
+  
   return self;
+}
+
+- (void) dealloc {
+  RELEASE(_settings);
+  [super dealloc];
 }
 
 - (void) setDelegate:(id) del {
@@ -112,6 +120,10 @@ static void handle_view_load_changed (WebKitWebView  *web_view,
 
 - (id) delegate {
   return delegate;
+}
+
+- (GTKWebViewSettings*) settings {
+ return _settings;
 }
 
 - (GtkWidget*) createWidgetForGTK {
@@ -127,13 +139,8 @@ static void handle_view_load_changed (WebKitWebView  *web_view,
   if (!url) return;
  
   [self executeInGTK:^{
-    GTKWebViewSettings* settings = [GTKWebViewSettings new];
-    [settings setDeveloperExtras:TRUE];
-     //[settings loadFromGTKWebKitView:webView];
-    [settings applyToGTKWebKitView:webView];
-     
-    //NSLog(@"settings: %@", settings);
-    
+    [_settings applyToGTKWebKitView:webView];
+         
     webkit_web_view_load_uri(webView, [[url description] cString]);
   }];
 }

@@ -27,6 +27,7 @@
 
 #import <AppKit/AppKit.h>
 #import "GTKWebView.h"
+#import "GTKWebViewSettings.h"
 
 #endif // _GTKWEBKIT_H_
 
