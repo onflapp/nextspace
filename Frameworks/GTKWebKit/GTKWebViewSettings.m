@@ -115,8 +115,13 @@
     
   webkit_settings_set_enable_developer_extras(settings, [self developerExtras]);
   webkit_settings_set_enable_javascript(settings, [self javaScript]);
+
+  /*
+   * these two functions are not available in Fedora out of the box
+   * we don't need them anyways (yet)
   webkit_settings_set_enable_media(settings, [self mediaPlayback]);
   webkit_settings_set_enable_webaudio(settings, [self mediaPlayback]);
+  */
 
   webkit_settings_set_enable_site_specific_quirks(settings, 1);
   webkit_settings_set_enable_webgl(settings, 0);  
