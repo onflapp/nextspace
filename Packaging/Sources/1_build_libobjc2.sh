@@ -14,8 +14,7 @@ cmake .. \
 	-DCMAKE_LIBRARY_PATH=/usr/NextSpace/lib \
 	-DCMAKE_INSTALL_LIBDIR=/usr/NextSpace/lib \
 	-DCMAKE_INSTALL_PREFIX=/usr/NextSpace \
-	-DCMAKE_LINKER=ld.gold \
-	-DCMAKE_MODULE_LINKER_FLAGS="-fuse-ld=/usr/bin/ld.gold -Wl,-rpath,/usr/NextSpace/lib" \
+	-DCMAKE_MODULE_LINKER_FLAGS="-Wl,-rpath,/usr/NextSpace/lib" \
 	-DCMAKE_SKIP_RPATH=ON \
 	-DTESTS=OFF \
 	-DCMAKE_BUILD_TYPE=Release \
