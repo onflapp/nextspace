@@ -18,6 +18,8 @@ if [ "$EUID" -eq 0 ];then
 	cp ../../System/usr/NextSpace/bin/* /usr/NextSpace/bin/
 
 	cp -R ../../System/usr/share/* /usr/share/
+
+	cp -R ../../System/root/Library/* /Library/
 fi
 
 echo "copying initial settings from $PWD/home"

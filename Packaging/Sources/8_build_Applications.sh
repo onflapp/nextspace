@@ -6,6 +6,10 @@
 
 CWD="$PWD"
 
+### /etc/skel needs to be available before we can build Workspace.app
+mkdir -p /etc/skel
+cp -R ../../System/etc/skel/Library /etc/skel
+
 cd ./Applications/ || exit 1
 
 $MAKE_CMD clean
