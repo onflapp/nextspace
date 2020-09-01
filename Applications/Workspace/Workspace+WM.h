@@ -20,7 +20,7 @@
 //
 
 //
-// This header is for WindowMaker and Workspace integration
+// This header is for Window Manager(X11) and Workspace(GNUstep) integration
 //
 
 #ifdef NEXTSPACE
@@ -30,7 +30,6 @@
 //-----------------------------------------------------------------------------
 #include <dispatch/dispatch.h>
 dispatch_queue_t workspace_q;
-dispatch_queue_t wmaker_q;
 
 enum {
       WSLogoutOnQuit = 0,
@@ -68,11 +67,9 @@ int ws_quit_code;
 BOOL xIsWindowServerReady(void);
 BOOL xIsWindowManagerAlreadyRunning(void);
 
-BOOL useInternalWindowManager;
-
 //-----------------------------------------------------------------------------
-// Calls related to internals of WindowMaker.
-// 'WM' prefix is a call direction 'Workspace->WindowMaker'
+// Calls related to internals of Window Manager.
+// 'WM' prefix is a call direction 'to WindowManager'
 //-----------------------------------------------------------------------------
 
 void WMInitializeWindowMaker(int argc, char **argv);
@@ -141,8 +138,8 @@ pid_t WMExecuteCommand(NSString *command);
 #endif //__Foundation_h_GNUSTEP_BASE_INCLUDE
 
 //-----------------------------------------------------------------------------
-// Visible in WindowMaker and Workspace
-// Workspace callbacks for WindowMaker.
+// Visible in Window Manager and Workspace
+// Workspace callbacks for use inside Window Manager.
 //-----------------------------------------------------------------------------
 
 // --- Dock

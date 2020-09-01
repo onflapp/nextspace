@@ -107,6 +107,8 @@ Requires:	libXfixes >= 5.0.1
 Requires:	libXmu >= 1.1.2
 Requires:	libXt >= 1.1.4
 Requires:	libXrandr >= 1.5
+# projectcenter
+Requires:	gdb
 
 %description
 GNUstep libraries - implementation of OpenStep (AppKit, Foundation).
@@ -181,6 +183,7 @@ cd ..
 # Build ProjectCenter
 cd apps-projectcenter-projectcenter-%{PC_VERSION}
 make
+cd ..
 
 #
 # Build install phase
@@ -222,7 +225,7 @@ mkdir -p %{buildroot}/usr/NextSpace/etc
 cp %{_sourcedir}/gdomap.interfaces %{buildroot}/usr/NextSpace/etc/
 mkdir -p %{buildroot}/usr/NextSpace/lib/systemd
 cp %{_sourcedir}/*.service %{buildroot}/usr/NextSpace/lib/systemd
-
+cd ..
 
 #
 # Files

@@ -4,6 +4,8 @@
 <dict>
     <key>GSBackend</key>
     <string>art</string>
+    <key>GSWorkspaceApplication</key>
+    <string>Workspace</string>
     <key>GSCommandKeyString</key>
     <string></string>
     <key>GSFirstAlternateKey</key>
@@ -59,7 +61,7 @@
     <key>NSSmallFont</key>
     <string>Helvetica</string>
     <key>NSSmallFontSize</key>
-    <string>9</string>
+    <string>10</string>
     <key>NSTitleBarFont</key>
     <string>Helvetica-Bold</string>
     <key>NSTitleBarFontSize</key>

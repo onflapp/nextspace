@@ -149,12 +149,23 @@ void wClientConfigure(WWindow * wwin, XConfigureRequestEvent * xcre)
   int nx, ny, nwidth, nheight;
   int ofs_x, ofs_y;
 
-  /*  printf("configure event: %d %d %d %d\n", xcre->x, xcre->y, xcre->width, xcre->height); */
+  /*  fprintf(stderr, "configure event: %d %d %d %d - %d \n",
+          xcre->x, xcre->y, xcre->width, xcre->height,
+          xcre->border_width);*/
 
+  /* configure a window that was not mapped by us */
   if (wwin == NULL) {
-    /*
-     * configure a window that was not mapped by us
-     */
+
+    // 0 value results "BadMatch (invalid parameter attributes)" error
+    if (!xcre->width || !xcre->height) {
+      fprintf(stderr,"[WM] !WARNING! X ConfigureRequest received with incorrect geometry.\n"
+              "\tWindow: %lu\n"
+              "\tWidth: %i\n"
+              "\tHeight: %i\n",
+              xcre->window, xcre->width, xcre->height);
+      return;
+    }
+    
     xwc.x = xcre->x;
     xwc.y = xcre->y;
     xwc.width = xcre->width;
