@@ -1,4 +1,5 @@
-clang-7.0
+clang-7
+clang
 cmake
 autoconf
 libtool
