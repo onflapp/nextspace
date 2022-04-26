@@ -22,6 +22,7 @@
 #import <AppKit/AppKit.h>
 #import <Preferences.h>
 #import "AddLayoutPanel.h"
+#import "ModifierKeys.h"
 
 @interface Keyboard : NSObject <PrefsModule>
 {
@@ -78,6 +79,10 @@
   id swapCAMtrx;
   id capsLockBtn;
   id capsLockMtrx;
+  
+  // Shortcut Modifiers
+  id shortcutModifiersBox;
+  ModifierKeys* shortcutModifiersController;
 }
 
 - (void)sectionButtonClicked:(id)sender;
