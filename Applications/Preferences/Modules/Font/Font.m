@@ -125,6 +125,7 @@ static void setBoolDefault(BOOL aBool, NSString *name)
 {
   [domain setObject:(aBool ? @"YES" : @"NO") forKey:name];
   [defaults setPersistentDomain:domain forName:NSGlobalDomain];
+  [defaults synchronize];
 }
 
 static NSString *getStringDefault(NSMutableDictionary *dict, NSString *name)
