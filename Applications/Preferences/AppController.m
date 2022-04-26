@@ -82,6 +82,12 @@
     NSLog(@"Configuring Keyboard...");
     [OSEKeyboard configureWithDefaults:defs];
 
+    NSString* xmodmapfile = [@"~/.Xmodmap" stringByExpandingTildeInPath];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:xmodmapfile]) {
+      NSLog(@"Configuring Keyboard from %@", xmodmapfile);
+      [NSTask launchedTaskWithLaunchPath:@"/usr/bin/xmodmap" arguments:[NSArray arrayWithObject: xmodmapfile]];
+    }
+
     NSLog(@"Configuring Mouse...");
     OSEMouse *mouse = [OSEMouse new];
     [mouse setAcceleration:[defs integerForKey:OSEMouseAcceleration]
