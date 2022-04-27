@@ -13,7 +13,8 @@ Keyboard_LANGUAGES = \
 
 Keyboard_LOCALIZED_RESOURCE_FILES = \
 	Keyboard.gorm \
-	AddLayoutPanel.gorm
+	AddLayoutPanel.gorm \
+	ModifierKeys.gorm
 
 Keyboard_RESOURCE_FILES = \
 	Resources/Keyboard.tiff \
@@ -25,11 +26,13 @@ Keyboard_RESOURCE_FILES = \
 
 Keyboard_OBJC_FILES = \
 	Keyboard.m \
-	AddLayoutPanel.m
+	AddLayoutPanel.m \
+	ModifierKeys.m
 
 Keyboard_HEADERS = \
 	Keyboard.h \
-	AddLayoutPanel.h
+	AddLayoutPanel.h \
+	ModifierKeys.h
 
 -include GNUmakefile.preamble
 include $(GNUSTEP_MAKEFILES)/bundle.make

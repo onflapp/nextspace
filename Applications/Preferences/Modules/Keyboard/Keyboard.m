@@ -68,6 +68,7 @@ static NXTDefaults *defaults = nil;
     [shortcutsBox release];
     [keypadBox release];
     [modifiersBox release];
+    [shortcutModifiersController release];
   }
 
   [super dealloc];
@@ -145,7 +146,7 @@ static NXTDefaults *defaults = nil;
   [capsLockBtn setRefusesFirstResponder:YES];
   for (id c in [capsLockMtrx cells])
     [c setRefusesFirstResponder:YES];
-  
+
   [self sectionButtonClicked:sectionsBtn];
 }
 
@@ -159,7 +160,18 @@ static NXTDefaults *defaults = nil;
           return nil;
         }
     }
-  
+ 
+  if (shortcutModifiersBox == nil)
+    {
+      shortcutModifiersController = [[ModifierKeys alloc] init];
+      if (![NSBundle loadNibNamed:@"ModifierKeys" owner:shortcutModifiersController])
+        {
+          NSLog (@"Could not load ModifierKeys.gorm file.");
+          return nil;
+        }
+      shortcutModifiersBox = [[shortcutModifiersController contentView] retain];
+    }
+
   return view;
 }
 
@@ -208,6 +220,9 @@ static NXTDefaults *defaults = nil;
         options = [[keyboard options] copy];
       [self initModifiers];
       [sectionBox setContentView:modifiersBox];
+      break;
+    case 6: // Shortcuts modifiers
+      [sectionBox setContentView:shortcutModifiersBox];
       break;
     default:
       NSLog(@"Keyboard.preferences: Unknow section button was clicked!");
