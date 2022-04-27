@@ -1,4 +1,4 @@
-/* TimeZone.h
+/* MapView.h
  *  
  * Copyright (C) 2005 Free Software Foundation, Inc.
  *
@@ -6,7 +6,6 @@
  * Date: December 2005
  *
  * This file is part of the GNUstep TimeZone Preference Pane
- * Take from the apps-systempreferences app
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,31 +21,65 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
+ 
+#ifndef MAP_VIEW_H
+#define MAP_VIEW_H
 
-#import <AppKit/AppKit.h>
+#include <Foundation/Foundation.h>
+#include <AppKit/NSView.h>
 
-#import <Preferences.h>
-
-@class MapView;
+@class NSImage;
 @class MapLocation;
 
-@interface DatePrefs: NSObject <PrefsModule>
+@interface MapView : NSView 
 {
-  IBOutlet id            window;;
-  IBOutlet id            view;
-  NSImage                *image; 
-
-  IBOutlet NSBox *imageBox;
-  MapView *mapView;
-  IBOutlet id zoneField;
-  IBOutlet id codeField;
-  IBOutlet id commentsField;
-  IBOutlet id setButt;
+  NSImage *mapImage;
+  NSMutableArray *locations;
+  id pane;
 }
 
-- (void)showInfoOfLocation:(MapLocation *)loc;
+- (id)initWithFrame:(NSRect)rect
+       withMapImage:(NSImage *)image
+      timeZonesPath:(NSString *)path
+  forPreferencePane:(id)apane;
 
-- (IBAction)setButtAction:(id)sender;
-- (IBAction)toggle24HTime:(id)sender;
+- (void)readZones:(NSString *)path;
+
+- (MapLocation *)locationNearestToPoint:(NSPoint)p;
 
 @end
+
+
+@interface MapLocation : NSObject
+{
+  NSString *code;
+  NSString *zone;
+  float latitude;
+  float longitude;
+  NSString *comments;
+}
+                            
+- (void)setCode:(NSString *)cd;
+
+- (NSString *)code;
+
+- (void)setZone:(NSString *)zn;
+
+- (NSString *)zone;
+
+- (void)setLatitude:(float)lat;
+
+- (float)latitude;
+
+- (void)setLongitude:(float)lon;
+
+- (float)longitude;
+
+- (void)setComments:(NSString *)cm;
+
+- (NSString *)comments;
+
+@end
+
+#endif // MAP_VIEW_H
+

@@ -1,0 +1,29 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    DatePrefs = {
+	Actions = (
+	    "setButtAction:"
+	);
+	Outlets = (
+	    window,
+	    view,
+	    zoneField,
+	    codeField,
+	    commentsField,
+	    setButt,
+	    imageBox
+	);
+	Super = NSObject;
+    };
+    FirstResponder = {
+	Actions = (
+	    "closeMainWindow:",
+	    "setButtAction:",
+	    "nextButtAction:",
+	    "prevButtAction:",
+	    "runInfoPanel:",
+	    "showAllButtAction:"
+	);
+	Super = NSObject;
+    };
+}

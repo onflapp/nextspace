@@ -1,23 +1,26 @@
-/* -*- mode: objc -*- */
-//
-// Project: Preferences
-//
-// Copyright (C) 2014-2019 Sergii Stoian
-//
-// This application is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public
-// License as published by the Free Software Foundation; either
-// version 2 of the License, or (at your option) any later version.
-//
-// This application is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-// Library General Public License for more details.
-//
-// You should have received a copy of the GNU General Public
-// License along with this library; if not, write to the Free
-// Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111 USA.
-//
+/* Date.m
+ *  
+ * Copyright (C) 2005-2013 Free Software Foundation, Inc.
+ *
+ * Author: Enrico Sersale <enrico@imago.ro>
+ * Date: December 2005
+ *
+ * This file is part of the GNUstep TimeZone Preference Pane
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
+ */
 
 #import <math.h>
 
@@ -33,88 +36,130 @@
 #import <AppKit/NSApplication.h>
 
 #import "Date.h"
+#import "MapView.h"
 
-@implementation Date
+@implementation DatePrefs
 
-static Date			*sharedInstance = nil;
-static id <XSPrefsController>	owner = nil;
-
-static NSBundle                 *bundle = nil;
-static NSUserDefaults           *defaults = nil;
-static NSMutableDictionary      *domain = nil;
-
-- (id) initWithOwner:(id <XSPrefsController>)anOwner
+- (id)init
 {
-  if (sharedInstance)
-    {
-      [self dealloc];
-    }
-  else
-    {
-      self = [super init];
-      owner = anOwner;
-      defaults = [NSUserDefaults standardUserDefaults];
-      domain = [[defaults persistentDomainForName: NSGlobalDomain] mutableCopy];
-      bundle = [NSBundle bundleForClass: [self class]];
-      
-      [owner registerPrefsModule: self];
-      
-      sharedInstance = self;
-    }
-  return sharedInstance;
-}
-
-- (void)release
-{
-  [super release];
+  NSBundle *bundle;
+  NSString *imagePath;
+  
+  self = [super init];
+  
+  bundle = [NSBundle bundleForClass:[self class]];
+  imagePath = [bundle pathForResource:@"Time" ofType:@"tiff"];
+  image = [[NSImage alloc] initWithContentsOfFile:imagePath];
+  
+  return self;
 }
 
 - (void)dealloc
 {
+  NSLog(@"DatePrefs -dealloc");
+  [image release];
+
+  if (view) [view release];
+
   [super dealloc];
 }
 
 - (void)awakeFromNib
 {
-}
-
-- (void) showView:(id)sender;
-{
-  if (!view)
+  if (mapView == nil)
     {
-      [NSBundle loadNibNamed:@"Date" owner:self];
-    }
+      NSBundle* bundle = [NSBundle bundleForClass:[self class]];
+      NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+      NSString *zone = [defaults objectForKey: @"Local Time Zone"];
+      NSString *path = [bundle pathForResource: @"map" ofType: @"tiff"];
+      NSImage *map = [[NSImage alloc] initWithContentsOfFile: path];
 
-  [owner setCurrentModule:self];
-  [view setNeedsDisplay:YES];
+      path = [bundle pathForResource: @"zones" ofType: @"db"];
+
+      mapView = [[MapView alloc] initWithFrame: [[imageBox contentView] frame]
+				  withMapImage: map
+				 timeZonesPath: path
+			     forPreferencePane: self];
+
+      [(NSBox *)imageBox setContentView: mapView];
+      RELEASE (mapView);
+      RELEASE (map);
+
+      NSScrollView* scrollView = (NSScrollView *)[[imageBox superview] superview];
+      [[scrollView contentView] scrollToPoint:NSMakePoint(80, 30)];
+      [scrollView reflectScrolledClipView: [scrollView contentView]];
+
+      if (zone)
+	{
+	  [zoneField setStringValue: zone];
+	}
+    }  
+
+  [view retain];
+  [window release];
 }
 
 - (NSView *) view
 {
+  if (view == nil)
+    {
+      if (![NSBundle loadNibNamed:@"Date" owner:self])
+        {
+          NSLog (@"Date.preferences: Could not load NIB, aborting.");
+          return nil;
+        }
+      view = [[window contentView] retain];
+    }
+
   return view;
 }
 
 - (NSString *) buttonCaption
 {
-  return NSLocalizedStringFromTableInBundle(@"Time and Date Preferences", 
-					    @"Localizable", bundle, @"");
+  return @"Timezone Preferences";
 }
 
 - (NSImage *) buttonImage
 {
-  return [NSImage imageNamed: @"Time"];
+  return image;
 }
 
-- (SEL) buttonAction
+- (void)showInfoOfLocation:(MapLocation *)loc
 {
-  return @selector(showView:);
+  if (loc) {
+    [zoneField setStringValue: [loc zone]];
+    [codeField setStringValue: [loc code]];
+    [commentsField setStringValue: (([loc comments] != nil) ? [loc comments] : @"")];
+  } else {
+    [zoneField setStringValue: @""];
+    [codeField setStringValue: @""];
+    [commentsField setStringValue: @""];
+  }
 }
 
-//
-// Action methods
-//
-/*- (IBAction) passwordChanged: (id)sender
+- (IBAction)toggle24HTime:(id)sender
 {
-}*/
+//ClockUses24Hours
+}
+
+- (IBAction)setButtAction:(id)sender
+{
+  CREATE_AUTORELEASE_POOL(arp);
+  NSUserDefaults *defaults;
+  NSMutableDictionary *domain;
+
+  defaults = [NSUserDefaults standardUserDefaults];
+  [defaults synchronize];
+  domain = [[defaults persistentDomainForName: NSGlobalDomain] mutableCopy];
+
+  [domain setObject: [zoneField stringValue] forKey: @"Local Time Zone"];  
+  
+  [defaults setPersistentDomain: domain forName: NSGlobalDomain];
+  [defaults synchronize];
+  RELEASE (domain);
+
+  RELEASE (arp);
+}
+
 
 @end
