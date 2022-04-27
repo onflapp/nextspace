@@ -58,10 +58,21 @@
   [privateWindowServerBtn setRefusesFirstResponder:YES];
   [privateSoundServerBtn setRefusesFirstResponder:YES];
 
+  BOOL hidden = [[NXTFileManager defaultManager] isShowHiddenFiles];
+
+  //override with global value, if any
+  NSUserDefaults* gdefaults = [NSUserDefaults standardUserDefaults];
+  [gdefaults synchronize];
+  NSMutableDictionary* gdomain = [[gdefaults persistentDomainForName: NSGlobalDomain] mutableCopy];
+  if ([gdomain objectForKey:@"GSFileBrowserHideDotFiles"]) {
+    hidden = ! [[gdomain objectForKey:@"GSFileBrowserHideDotFiles"] boolValue];
+  }
+
   [sortByBtn
     selectItemWithTag:[[NXTFileManager defaultManager] sortFilesBy]];
   [showHiddenFilesBtn
-    setState:[[NXTFileManager defaultManager] isShowHiddenFiles]];
+    setState:hidden];
+
 }
 
 - (NSView *)view
@@ -99,7 +110,22 @@
 
 - (void)setShowHiddenFiles:(id)sender
 {
-  [[NXTFileManager defaultManager] setShowHiddenFiles:[sender state]];
+  BOOL hidden = [sender state];
+  [[NXTFileManager defaultManager] setShowHiddenFiles:hidden];
+
+  //save global value
+  NSUserDefaults* gdefaults = [NSUserDefaults standardUserDefaults];
+  [gdefaults synchronize];
+  NSMutableDictionary* gdomain = [[gdefaults persistentDomainForName: NSGlobalDomain] mutableCopy];
+  [gdomain setObject:[NSNumber numberWithBool:!hidden] forKey:@"GSFileBrowserHideDotFiles"];
+
+  [gdefaults setPersistentDomain: gdomain forName: NSGlobalDomain];
+  [gdefaults synchronize];
+
+  [[NSDistributedNotificationCenter defaultCenter]
+              postNotificationName: @"GSHideDotFilesDidChangeNotification"
+                            object: nil
+			  userInfo: [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:!hidden] forKey: @"hide"]];
 }
 
 @end
