@@ -80,6 +80,8 @@
   systemScreen = [OSEScreen new];
   [systemScreen setUseAutosave:YES];
 
+  NXTDefaults *defs = [NXTDefaults globalUserDefaults];
+
   // Setup NXNumericField float constraints
   [gammaField setMinimumValue:0.1];
   [gammaField setMaximumValue:2.0];
@@ -97,6 +99,10 @@
   [reflectionBtn setEnabled:NO];
 
   // Desktop background
+  BOOL managedExternally = [[defs objectForKey:@"DoNotManageDesktopBackground"] boolValue];
+  [managedBackgroundBtn setState:managedExternally];
+  [colorBtn setEnabled:!managedExternally];
+
   CGFloat red, green, blue;
   if ([systemScreen backgroundColorRed:&red green:&green blue:&blue] == YES)
     {
@@ -105,9 +111,11 @@
                                                  blue:blue
                                                 alpha:1.0];
       [colorBtn setColor:desktopBackground];
-      [systemScreen setBackgroundColorRed:red
-                                    green:green
-                                     blue:blue];
+      if (!managedExternally) {
+        [systemScreen setBackgroundColorRed:red
+                                      green:green
+                                       blue:blue];
+      }
     }
 
   [[NSNotificationCenter defaultCenter]
@@ -325,6 +333,14 @@
   else {
     NSLog(@"Unknown slider moved");
   }
+}
+
+- (IBAction)managedBackgroundChanged:(id)sender
+{
+  BOOL managedExternally = [sender state];
+  [colorBtn setEnabled:!managedExternally];
+  NXTDefaults *defs = [NXTDefaults globalUserDefaults];
+  [defs setObject:[NSNumber numberWithBool:managedExternally] forKey:@"DoNotManageDesktopBackground"];
 }
 
 - (IBAction)backgroundChanged:(id)sender

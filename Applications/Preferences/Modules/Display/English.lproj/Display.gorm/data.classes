@@ -6,7 +6,8 @@
 	    "sliderMoved:",
 	    "resolutionClicked:",
 	    "rateClicked:",
-	    "backgroundChanged:"
+	    "backgroundChanged:",
+	    "managedBackgroundChanged:"
 	);
 	Outlets = (
 	    view,
@@ -22,14 +23,16 @@
 	    rateBtn,
 	    resolutionBtn,
 	    reflectionBtn,
-	    rotationBtn
+	    rotationBtn,
+	    managedBackgroundBtn
 	);
 	Super = NSObject;
     };
     FirstResponder = {
 	Actions = (
-	    "monitorsListClicked:",
 	    "backgroundChanged:",
+	    "monitorsListClicked:",
+	    "managedBackgroundChanged:",
 	    "rateClicked:",
 	    "resolutionClicked:",
 	    "sliderMoved:"
