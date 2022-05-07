@@ -38,6 +38,7 @@
   id resolutionBtn;
   id rotationBtn;
   id reflectionBtn;
+  id managedBackgroundBtn;
   NSColorWell *colorBtn;
 
   NSImage    *image;

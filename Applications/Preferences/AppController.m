@@ -94,11 +94,15 @@
                  threshold:[defs integerForKey:OSEMouseThreshold]];
     [mouse release];
 
-    NSLog(@"Configuring Desktop background...");
-    OSEScreen *screen = [OSEScreen sharedScreen];
-    CGFloat red, green, blue;
-    if ([screen savedBackgroundColorRed:&red green:&green blue:&blue] == YES) {
-      [screen setBackgroundColorRed:red green:green blue:blue];
+    BOOL managedExternally = [[defs objectForKey:@"DoNotManageDesktopBackground"] boolValue];
+
+    if (!managedExternally) {
+      NSLog(@"Configuring Desktop background...");
+      OSEScreen *screen = [OSEScreen sharedScreen];
+      CGFloat red, green, blue;
+      if ([screen savedBackgroundColorRed:&red green:&green blue:&blue] == YES) {
+        [screen setBackgroundColorRed:red green:green blue:blue];
+      }
     }
   }
 }
