@@ -337,8 +337,7 @@
 	  [hackDictionary writeToFile:hackFile atomically:NO];
 	}
       NSLog(@"File was decompressed. Call for workspace.");
-      [[NSWorkspace sharedWorkspace] openFile:unarchiveDirectoryPath
-			      withApplication:@"Workspace"];
+      [[NSWorkspace sharedWorkspace] selectFile:@"." inFileViewerRootedAtPath:unarchiveDirectoryPath];
     }
 
   return;
