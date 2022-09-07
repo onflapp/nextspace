@@ -95,7 +95,7 @@
 {
   int          result;
   NSArray      *fileTypes = [NSImage imageFileTypes];
-  NXTOpenPanel *openPanel = [NXTOpenPanel openPanel];
+  NSOpenPanel *openPanel = [NSOpenPanel openPanel];
   NSString     *pth = [[NSUserDefaults standardUserDefaults]
                         objectForKey:@"OpenDir"];
 

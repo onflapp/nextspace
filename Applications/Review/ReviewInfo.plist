@@ -18,24 +18,64 @@
     NSRole = Application;
     NSTypes = (
 	{
+	    NSDOSExtensions = (
+		jpg,
+		JPG,
+		jpeg,
+		JPEG
+	    );
+	    NSHumanReadableName = unknown;
 	    NSIcon = "JPEGImage.tiff";
-	    NSUnixExtensions = (jpg,jpeg);
+	    NSName = unknown;
+	    NSRole = unknown;
+	    NSUnixExtensions = (
+		jpg,
+		JPG,
+		jpeg,
+		JPEG
+	    );
 	},
 	{
+	    NSHumanReadableName = unknown;
 	    NSIcon = "TIFFImage.tiff";
-	    NSUnixExtensions = (tif,tiff);
+	    NSName = unknown;
+	    NSRole = unknown;
+	    NSUnixExtensions = (
+		tif,
+		TIF,
+		tiff,
+		TIFF
+	    );
 	},
 	{
+	    NSHumanReadableName = unknown;
 	    NSIcon = "PNGImage.tiff";
-	    NSUnixExtensions = (png);
+	    NSName = unknown;
+	    NSRole = unknown;
+	    NSUnixExtensions = (
+		PNG,
+		png
+	    );
 	},
 	{
+	    NSHumanReadableName = unknown;
 	    NSIcon = "GIFImage.tiff";
-	    NSUnixExtensions = (gif);
+	    NSName = unknown;
+	    NSRole = unknown;
+	    NSUnixExtensions = (
+		GIF,
+		gif
+	    );
 	},
 	{
+	    NSHumanReadableName = unknown;
 	    NSIcon = "XPMImage.tiff";
-	    NSUnixExtensions = (xpm);
+	    NSName = unknown;
+	    NSRole = unknown;
+	    NSUnixExtensions = (
+		xpm,
+		XPM
+	    );
 	}
     );
 }
