@@ -1,0 +1,36 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	0.0.0	//
+ThemesPrefs	Themes.h	26;"	i	protocols:PrefsModule
+ThemesPrefs	Themes.m	37;"	I
+apply:	Themes.h	41;"	m	interface:ThemesPrefs
+apply:	Themes.m	178;"	m	implementation:ThemesPrefs
+authorsView	Themes.h	36;"	E	interface:ThemesPrefs
+awakeFromNib	Themes.m	67;"	m	implementation:ThemesPrefs
+buttonCaption	Themes.m	88;"	m	implementation:ThemesPrefs
+buttonImage	Themes.m	93;"	m	implementation:ThemesPrefs
+changeSelection:	Themes.h	43;"	m	interface:ThemesPrefs
+changeSelection:	Themes.m	123;"	m	implementation:ThemesPrefs
+dealloc	Themes.m	54;"	m	implementation:ThemesPrefs
+detailsView	Themes.h	35;"	E	interface:ThemesPrefs
+image	Themes.h	30;"	E	interface:ThemesPrefs
+init	Themes.m	40;"	m	implementation:ThemesPrefs
+licenseField	Themes.h	38;"	E	interface:ThemesPrefs
+loadThemes:	Themes.h	44;"	m	interface:ThemesPrefs
+loadThemes:	Themes.m	202;"	m	implementation:ThemesPrefs
+mainViewDidLoad	Themes.m	98;"	m	implementation:ThemesPrefs
+matrix	Themes.h	32;"	E	interface:ThemesPrefs
+nameField	Themes.h	34;"	E	interface:ThemesPrefs
+previewView	Themes.h	33;"	E	interface:ThemesPrefs
+save:	Themes.h	42;"	m	interface:ThemesPrefs
+save:	Themes.m	183;"	m	implementation:ThemesPrefs
+versionField	Themes.h	37;"	E	interface:ThemesPrefs
+view	Themes.h	28;"	E	interface:ThemesPrefs
+view	Themes.m	73;"	m	implementation:ThemesPrefs
+window	Themes.h	29;"	E	interface:ThemesPrefs
