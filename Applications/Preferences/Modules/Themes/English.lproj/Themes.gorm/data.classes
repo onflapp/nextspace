@@ -5,7 +5,7 @@
 	    "apply:",
 	    "changeSelection:",
 	    "loadThemes:",
-	    "newAction:",
+	    "changeOption:",
 	    "save:",
 	    "settingsAction:",
 	    "styleAction:",
@@ -19,7 +19,8 @@
 	    "save:",
 	    "changeSelection:",
 	    "loadThemes:",
-	    "open:"
+	    "open:",
+	    "changeOption:"
 	);
 	Outlets = (
 	    matrix,
@@ -30,7 +31,8 @@
 	    licenseField,
 	    view,
 	    window,
-	    pathField
+	    pathField,
+	    scrollByPage
 	);
 	Super = NSObject;
     };

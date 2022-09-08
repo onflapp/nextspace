@@ -39,12 +39,14 @@
   IBOutlet NSTextField  *versionField;
   IBOutlet NSTextField  *licenseField;
   IBOutlet NSTextField  *pathField;
+  IBOutlet NSButton     *scrollByPage;
 }
 
 - (IBAction)open: (id)sender;
 - (IBAction)apply: (id)sender;
 - (IBAction)save: (id)sender;
 - (void) changeSelection: (id)sender;
+- (void) changeOption: (id)sender;
 - (void) loadThemes: (id)sender;
 
 @end

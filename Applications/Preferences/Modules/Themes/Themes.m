@@ -115,9 +115,26 @@
   [matrix setAction: @selector(changeSelection:)];
   [matrix setTarget: self];
 
+  NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+ NSMutableDictionary* domain = [[defaults persistentDomainForName:NSGlobalDomain] mutableCopy];
+
+  [scrollByPage setState:[[domain valueForKey:@"GSScrollerScrollsByPage"]boolValue]];
+
   [self loadThemes:self];
 }
 
+- (void) changeOption: (id)sender
+{
+  NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+ NSMutableDictionary* domain = [[defaults persistentDomainForName:NSGlobalDomain] mutableCopy];
+
+  if (sender == scrollByPage) {
+    [domain setValue:[NSNumber numberWithBool:[scrollByPage state]] forKey:@"GSScrollerScrollsByPage"];
+  }
+
+  [defaults setPersistentDomain:domain forName:@"NSGlobalDomain"];
+  [defaults synchronize];
+}
 - (void) changeSelection: (id)sender
 {
   NSButtonCell	*cell = [sender selectedCell];
