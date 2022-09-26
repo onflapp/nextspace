@@ -26,6 +26,7 @@
 #import <DesktopKit/NXTClockView.h>
 
 #import "AppController.h"
+#import "KeyboardStatusMonitor.h"
 
 @implementation AppController
 
@@ -77,23 +78,10 @@
   // NSApplication removed arguments (-NXAutoLaunch YES) to omit flickering.
   // We've just finished launching and not active == we've autolaunched
   if ([NSApp isActive] == NO) {
+
+    [self configureMouseAndKeyboard];
+
     NXTDefaults *defs = [NXTDefaults globalUserDefaults];
-
-    NSLog(@"Configuring Keyboard...");
-    [OSEKeyboard configureWithDefaults:defs];
-
-    NSString* xmodmapfile = [@"~/.Xmodmap" stringByExpandingTildeInPath];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:xmodmapfile]) {
-      NSLog(@"Configuring Keyboard from %@", xmodmapfile);
-      [NSTask launchedTaskWithLaunchPath:@"/usr/bin/xmodmap" arguments:[NSArray arrayWithObject: xmodmapfile]];
-    }
-
-    NSLog(@"Configuring Mouse...");
-    OSEMouse *mouse = [OSEMouse new];
-    [mouse setAcceleration:[defs integerForKey:OSEMouseAcceleration]
-                 threshold:[defs integerForKey:OSEMouseThreshold]];
-    [mouse release];
-
     BOOL managedExternally = [[defs objectForKey:@"DoNotManageDesktopBackground"] boolValue];
 
     if (!managedExternally) {
@@ -105,6 +93,33 @@
       }
     }
   }
+
+  // we used this to watch for display bein turned on and off
+  // in which case we will reconfigure the mouse and keyboard
+  // this should prevent reseting settings after a display goes to sleep
+  KeyboardStatusMonitor* kstat = [[KeyboardStatusMonitor alloc] init];
+  [kstat performSelectorInBackground:@selector(processXWindowsEvents:) withObject:self];
+}
+
+- (void) configureMouseAndKeyboard
+{
+  NXTDefaults *defs = [NXTDefaults globalUserDefaults];
+
+  NSLog(@"Configuring Keyboard...");
+  [OSEKeyboard configureWithDefaults:defs];
+
+  NSLog(@"Load user's Xmodmap");
+  NSString* xmodmapfile = [@"~/.Xmodmap" stringByExpandingTildeInPath];
+  if ([[NSFileManager defaultManager] fileExistsAtPath:xmodmapfile]) {
+    NSLog(@"Configuring Keyboard from %@", xmodmapfile);
+    [NSTask launchedTaskWithLaunchPath:@"/usr/bin/xmodmap" arguments:[NSArray arrayWithObject: xmodmapfile]];
+  }
+
+  NSLog(@"Configuring Mouse...");
+  OSEMouse *mouse = [OSEMouse new];
+  [mouse setAcceleration:[defs integerForKey:OSEMouseAcceleration]
+               threshold:[defs integerForKey:OSEMouseThreshold]];
+  [mouse release];
 }
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender

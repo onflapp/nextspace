@@ -69,6 +69,7 @@ $(APP_NAME)_HEADER_FILES_INSTALL_DIR = $(GNUSTEP_SYSTEM_HEADERS)/apps
 #
 $(APP_NAME)_OBJC_FILES = \
 AppController.m \
+KeyboardStatusMonitor.m \
 PrefsController.m
 
 #
