@@ -35,9 +35,11 @@ typedef unsigned long long CPUTime[CPUSTATES];
   id             pauseMenuCell;		// To change when we pause/unpause.
   id             colorFields;		// Fields that contain the color scheme.
   id             readmeText;		// the readme text...
+  id             processText;   // path to the process manager
 }
 
 // Action methods
+- (void)launchProcessManager:(id)sender;
 - (void)togglePause:(id)sender;
 - (void)setPeriod:(id)sender;
 - (void)setLag:(id)sender;

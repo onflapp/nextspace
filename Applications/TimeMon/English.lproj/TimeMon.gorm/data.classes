@@ -2,9 +2,12 @@
     "## Comment" = "Do NOT change this file, Gorm maintains it";
     FirstResponder = {
 	Actions = (
+	    "launchProcessManager:",
+	    "orderFrontPathSelectorPanel:",
 	    "setFactor:",
 	    "setLag:",
 	    "setPeriod:",
+	    "setProcess:",
 	    "togglePause:"
 	);
 	Super = NSObject;
@@ -20,7 +23,10 @@
 	    "togglePause:",
 	    "setPeriod:",
 	    "setLag:",
-	    "setFactor:"
+	    "setFactor:",
+	    "launchProcessManager:",
+	    "orderFrontPathSelectorPanel:",
+	    "setProcess:"
 	);
 	Outlets = (
 	    periodText,
@@ -33,7 +39,8 @@
 	    iowaitColor,
 	    niceColor,
 	    systemColor,
-	    userColor
+	    userColor,
+	    processText
 	);
 	Super = NSObject;
     };

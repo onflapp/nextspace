@@ -300,7 +300,10 @@
   te = [NSTimer scheduledTimerWithTimeInterval:(NSTimeInterval)f
                                     invocation:selfStep
                                        repeats:YES];
-    
+  
+  // Get process manager command
+  [processText setStringValue:[defaults objectForKey:@"ProcessManager"]];
+
   // Get the lag factor.
   lagFactor = [defaults integerForKey:@"LagFactor"];
   lagFactor = MAX(lagFactor, MINLAGFACTOR);
@@ -406,6 +409,38 @@
   [self __reallocOldTimes];
 }
 
+- (void)setProcess:(id)sender
+{
+  [defaults setObject:[processText stringValue] forKey:@"ProcessManager"];
+  [defaults synchronize];
+}
+
+- (void)orderFrontPathSelectorPanel:(id)sender
+{
+  NSOpenPanel* panel = [NSOpenPanel openPanel];
+  [panel setAllowsMultipleSelection:NO];
+
+  if ([panel runModalForTypes:[NSArray arrayWithObject:@"app"]]) {
+    [processText setStringValue:[[panel filename]lastPathComponent]];
+    [self setProcess:processText];
+  }
+}
+
+- (void)launchProcessManager:(id)sender
+{
+  NSString* appname = [defaults objectForKey:@"ProcessManager"];
+  if ([appname length]) {
+    NSWorkspace* wk = [NSWorkspace sharedWorkspace];
+    [wk launchApplication:appname];
+  }
+  else {
+    NSRunAlertPanel(@"TimeMon",
+      @"Process manager app is not set, please check your proferences."
+			@"", nil, nil, nil
+		);
+  }
+}
+
 - (BOOL)textShouldEndEditing:(NSText *)sender
 {
   id delegate = [sender delegate];
@@ -421,6 +456,10 @@
   else if (delegate == lagText) 
     {
       [self setLag:lagText];
+    }
+  else if (delegate == processText)
+    {
+      [self setProcess:processText];
     }
 
   return YES;
