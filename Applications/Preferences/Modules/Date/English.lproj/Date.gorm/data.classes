@@ -2,7 +2,8 @@
     "## Comment" = "Do NOT change this file, Gorm maintains it";
     DatePrefs = {
 	Actions = (
-	    "setButtAction:"
+	    "setButtAction:",
+	    "toggleTimeFormat:"
 	);
 	Outlets = (
 	    window,
@@ -11,17 +12,19 @@
 	    codeField,
 	    commentsField,
 	    setButt,
-	    imageBox
+	    imageBox,
+	    timeFormat
 	);
 	Super = NSObject;
     };
     FirstResponder = {
 	Actions = (
 	    "closeMainWindow:",
-	    "setButtAction:",
+	    "toggleTimeFormat:",
 	    "nextButtAction:",
 	    "prevButtAction:",
 	    "runInfoPanel:",
+	    "setButtAction:",
 	    "showAllButtAction:"
 	);
 	Super = NSObject;

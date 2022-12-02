@@ -42,11 +42,12 @@
   IBOutlet id codeField;
   IBOutlet id commentsField;
   IBOutlet id setButt;
+  IBOutlet id timeFormat;
 }
 
 - (void)showInfoOfLocation:(MapLocation *)loc;
 
 - (IBAction)setButtAction:(id)sender;
-- (IBAction)toggle24HTime:(id)sender;
+- (IBAction)toggleTimeFormat:(id)sender;
 
 @end

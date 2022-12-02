@@ -35,6 +35,8 @@
 
 #import <AppKit/NSApplication.h>
 
+#import <DesktopKit/NXTDefaults.h>
+
 #import "Date.h"
 #import "MapView.h"
 
@@ -89,6 +91,9 @@
       [[scrollView contentView] scrollToPoint:NSMakePoint(80, 30)];
       [scrollView reflectScrolledClipView: [scrollView contentView]];
 
+
+     [timeFormat setState:[[NXTDefaults globalUserDefaults] boolForKey:@"ClockView24HourFormat"]];
+
       if (zone)
 	{
 	  [zoneField setStringValue: zone];
@@ -137,9 +142,11 @@
   }
 }
 
-- (IBAction)toggle24HTime:(id)sender
+- (IBAction)toggleTimeFormat:(id)sender
 {
-//ClockUses24Hours
+  NSInteger v = (NSInteger)[sender state];
+  [[NXTDefaults globalUserDefaults] setBool:(BOOL)v forKey:@"ClockView24HourFormat"];
+  [[NXTDefaults globalUserDefaults] synchronize];
 }
 
 - (IBAction)setButtAction:(id)sender
