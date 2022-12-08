@@ -12,6 +12,12 @@
 
 typedef unsigned long long CPUTime[CPUSTATES];
 
+@interface PercentagesView : NSView
+{
+  NSImage        *tileImage;
+}
+@end
+
 @interface Percentages : NSObject
 {
   CPUTime        *oldTimes;		// The array of collected CPU times for
@@ -36,6 +42,7 @@ typedef unsigned long long CPUTime[CPUSTATES];
   id             colorFields;		// Fields that contain the color scheme.
   id             readmeText;		// the readme text...
   id             processText;   // path to the process manager
+  PercentagesView *percentagesView;
 }
 
 // Action methods
@@ -47,6 +54,7 @@ typedef unsigned long long CPUTime[CPUSTATES];
 
     // Update as indicated by updateFlags.
 - (void)update;
+- (void)drawPercentages;
     // Get new _cp_time and apply that data to percentages.
 - (void)step;
     // Hook into initialization process of app.

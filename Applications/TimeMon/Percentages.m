@@ -25,20 +25,69 @@
 #define MINFACTOR	4
 #define MINLAGFACTOR	1
 
+@implementation PercentagesView
+- (id)initWithFrame:(NSRect) r
+{
+  self = [super initWithFrame:r];
+  if (self) {
+    tileImage = [NSImage imageNamed:@"common_Tile"];
+  }
+  return self;
+}
+
+
+- (void)drawRect:(NSRect)r
+{
+  if (tileImage)
+     [tileImage compositeToPoint:NSMakePoint(0,0)
+                        fromRect:NSMakeRect(0, 0, 64, 64)
+                      operation:NSCompositeSourceAtop];
+
+  NSAffineTransform *transform = [[NSAffineTransform alloc] init];
+  [transform translateXBy:8 yBy:8];
+  [transform set];
+
+  [(Percentages*)[NSApp delegate] drawPercentages];
+
+  [transform release];
+}
+@end
+
 @implementation Percentages
 
 - (id)init
 {
   self = [super init];
   if (self) {
-      // stipple = [NSImage imageNamed:@"NSApplicationIcon"];
-      defaults = [NSUserDefaults standardUserDefaults];
-      [NSApp setDelegate:self];
-    }
+    // stipple = [NSImage imageNamed:@"NSApplicationIcon"];
+    defaults = [NSUserDefaults standardUserDefaults];
+    [NSApp setDelegate:self];
+
+    percentagesView = [[PercentagesView alloc] initWithFrame:NSMakeRect(0, 0, 64, 64)];
+    [[NSApp iconWindow] setContentView:percentagesView];
+    [percentagesView release];
+  }
   return self;
 }
 
-- (void)drawImageRep
+
+- (void)awakeFromNib
+{
+  NSString *path = [[NSBundle mainBundle] pathForResource:@"README" 
+                                                   ofType:@"rtf"];
+  // load the readme if it exists.
+  if (path != nil) {
+    NSData *data = [NSData dataWithContentsOfFile:path];
+    if (data != nil) {
+      NSDictionary  *dict = nil;
+      NSTextStorage *ts = [[NSTextStorage alloc] initWithRTF:data
+                                          documentAttributes:&dict];
+      [[(NSTextView *)readmeText layoutManager] replaceTextStorage:ts];
+    }
+  }  
+}
+
+- (void)drawPercentages
 {
   NSColor *borderColor = [NSColor colorFromStringRepresentation: 
                                          [defaults stringForKey:@"BorderColor"]];
@@ -89,37 +138,9 @@
   [bp stroke];
 }
 
-- (void)awakeFromNib
-{
-  NSString *path = [[NSBundle mainBundle] pathForResource:@"README" 
-                                                   ofType:@"rtf"];
-  // load the readme if it exists.
-  if (path != nil) {
-    NSData *data = [NSData dataWithContentsOfFile:path];
-    if (data != nil) {
-      NSDictionary  *dict = nil;
-      NSTextStorage *ts = [[NSTextStorage alloc] initWithRTF:data
-                                          documentAttributes:&dict];
-      [[(NSTextView *)readmeText layoutManager] replaceTextStorage:ts];
-    }
-  }  
-}
-
 - (void)update
 {
-  NSImageRep *r;
-  NSImage    *stipple;
-  
-  stipple = [[NSImage alloc] initWithSize:NSMakeSize(48,48)];
-  r = [[NSCustomImageRep alloc]
-        initWithDrawSelector:@selector(drawImageRep)
-                    delegate:self];
-  [r setSize:NSMakeSize(48,48)];
-  [stipple addRepresentation:r];
-  [NSApp setApplicationIconImage:stipple];
-
-  [r release];
-  [stipple release];  /* setApplicationIconImage does a retain, so we release */
+  [percentagesView setNeedsDisplay:YES];
 }
 
 - (void)step
