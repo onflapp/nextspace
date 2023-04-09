@@ -54,6 +54,7 @@ NSString *OSEDisplayGammaRedKey = @"Red";
 NSString *OSEDisplayGammaGreenKey = @"Green";
 NSString *OSEDisplayGammaBlueKey = @"Blue";
 NSString *OSEDisplayGammaBrightnessKey = @"Brightness";
+NSString *OSEDisplayBrightnessKey = @"DisplayBrightness";
 NSString *OSEDisplayIDKey = @"ID";
 NSString *OSEDisplayNameKey = @"Name";
 NSString *OSEDisplayFrameKey = @"Frame";

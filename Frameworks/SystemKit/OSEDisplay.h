@@ -54,6 +54,7 @@ typedef struct _NXGammaValue NXGammaValue;
   NSMutableDictionary	*properties;
   
   BOOL			isMain;
+  BOOL      hasDisplayBrightness;
   // BOOL			isActive;
 }
 
@@ -113,6 +114,13 @@ typedef struct _NXGammaValue NXGammaValue;
 - (void)setActive:(BOOL)active;
 - (BOOL)isMain;
 - (void)setMain:(BOOL)yn;
+
+//------------------------------------------------------------------------------
+//--- xbrightness
+//------------------------------------------------------------------------------
+- (BOOL)isDisplayBrightnessSupported;
+- (CGFloat)displayBrightness;
+- (void)setDisplayBrightness:(CGFloat)brightness;
 
 //------------------------------------------------------------------------------
 //--- Gamma correction, brightness

@@ -211,6 +211,16 @@
 {
   NSLog(@"Display: save current Display.confg");
   [systemScreen saveCurrentDisplayLayout];
+
+  NXTDefaults *defs = [NXTDefaults globalUserDefaults];
+  if ([selectedDisplay isDisplayBrightnessSupported]) 
+    {
+      [defs setObject:[NSNumber numberWithInt:[brightnessField intValue]] forKey:OSEDisplayBrightnessKey];
+    }
+  else
+    {
+      [defs removeObjectForKey:OSEDisplayBrightnessKey];
+    }
 }
 
 //
@@ -270,6 +280,15 @@
       [brightnessSlider setEnabled:NO];
       [brightnessField setEnabled:NO];
     }
+
+  if ([selectedDisplay isDisplayBrightnessSupported] == YES) 
+    {
+      // Display Brightness
+      CGFloat brightness = [selectedDisplay displayBrightness];
+      [brightnessSlider setFloatValue:brightness];
+      [brightnessField
+        setStringValue:[NSString stringWithFormat:@"%.0f", brightness]];
+    }
 }
 
 - (IBAction)resolutionClicked:(id)sender
@@ -327,7 +346,14 @@
     [brightnessField setIntValue:[sender intValue]];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),
                    ^{
-                     [selectedDisplay setGammaBrightness:value/100];
+                     if ([selectedDisplay isDisplayBrightnessSupported]) 
+                       {
+                         [selectedDisplay setDisplayBrightness:value];
+                       }
+                     else 
+                       {
+                         [selectedDisplay setGammaBrightness:value/100];
+                       }
                    });
   }
   else {
@@ -413,11 +439,22 @@
     }
   else if (tf == brightnessField)
     {
-      [selectedDisplay setGammaBrightness:value/100];
-      value = [selectedDisplay gammaBrightness]*100;
-      [brightnessSlider setFloatValue:value];
-      // [tf setIntValue:[strVal intValue]];
-      [tf setFloatValue:value];
+      if ([selectedDisplay isDisplayBrightnessSupported]) 
+        {
+          [selectedDisplay setDisplayBrightness:value];
+          value = [selectedDisplay displayBrightness];
+          [brightnessSlider setFloatValue:value];
+          // [tf setIntValue:[strVal intValue]];
+          [tf setFloatValue:value];
+        }
+      else
+        {
+          [selectedDisplay setGammaBrightness:value/100];
+          value = [selectedDisplay gammaBrightness]*100;
+          [brightnessSlider setFloatValue:value];
+          // [tf setIntValue:[strVal intValue]];
+          [tf setFloatValue:value];
+        }
     }
 
   // Changes to gamma is not generate XRRScreenChangeNotify event.

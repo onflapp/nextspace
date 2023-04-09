@@ -156,6 +156,7 @@ extern NSString *OSEDisplayGammaRedKey;
 extern NSString *OSEDisplayGammaGreenKey;
 extern NSString *OSEDisplayGammaBlueKey;
 extern NSString *OSEDisplayGammaBrightnessKey;
+extern NSString *OSEDisplayBrightnessKey;
 extern NSString *OSEDisplayIDKey;
 extern NSString *OSEDisplayNameKey;
 extern NSString *OSEDisplayFrameKey;

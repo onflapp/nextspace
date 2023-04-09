@@ -78,6 +78,7 @@
 #include <X11/Xmd.h>
 #import "OSEScreen.h"
 #import "OSEDisplay.h"
+#import "xbacklight.h"
 
 @implementation OSEDisplay
 
@@ -217,6 +218,11 @@
   _physicalSize = NSMakeSize((CGFloat)output_info->mm_width,
                             (CGFloat)output_info->mm_height);
   connectionState = output_info->connection;
+
+  if (xbacklight(NULL, "get", 0) == -1)
+    hasDisplayBrightness = NO;
+  else
+    hasDisplayBrightness = YES;
 
   // Get all resolutions for display
   allResolutions = [[NSMutableArray alloc] init];
@@ -859,6 +865,21 @@ find_last_non_clamped(CARD16 array[], int size)
               green:gammaValue.green
                blue:gammaValue.blue
          brightness:brightness];
+}
+
+- (BOOL)isDisplayBrightnessSupported
+{
+  return hasDisplayBrightness;
+}
+
+- (CGFloat)displayBrightness
+{
+  CGFloat val = (CGFloat)ceil(xbacklight(NULL, "get", 0));
+  return val;
+}
+- (void)setDisplayBrightness:(CGFloat)brightness
+{
+  xbacklight(NULL, "set", ceil(brightness));
 }
 
 #include <unistd.h>

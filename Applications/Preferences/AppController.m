@@ -22,6 +22,7 @@
 #import <DesktopKit/NXTDefaults.h>
 #import <SystemKit/OSEKeyboard.h>
 #import <SystemKit/OSEMouse.h>
+#import <SystemKit/OSEDisplay.h>
 #import <SystemKit/OSEScreen.h>
 #import <DesktopKit/NXTClockView.h>
 
@@ -120,6 +121,15 @@
   [mouse setAcceleration:[defs integerForKey:OSEMouseAcceleration]
                threshold:[defs integerForKey:OSEMouseThreshold]];
   [mouse release];
+
+  NSLog(@"Configuring Brightness...");
+  int val = [[defs objectForKey:OSEDisplayBrightnessKey]intValue];
+  if (val) {
+    for (OSEDisplay *disp in [[OSEScreen sharedScreen] connectedDisplays]) {
+      [disp setDisplayBrightness:val];
+    }
+  }
+
 }
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
