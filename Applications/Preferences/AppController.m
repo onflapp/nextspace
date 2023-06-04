@@ -102,6 +102,11 @@
   [kstat performSelectorInBackground:@selector(processXWindowsEvents:) withObject:self];
 }
 
+- (void) wakeUpAfterSleep
+{
+  [self performSelector:@selector(configureMouseAndKeyboard) withObject:nil afterDelay:2.0];
+}
+
 - (void) configureMouseAndKeyboard
 {
   NXTDefaults *defs = [NXTDefaults globalUserDefaults];

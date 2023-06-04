@@ -37,7 +37,7 @@
       if (e.xproperty.atom == atom) {
         Time d = e.xproperty.time - lasttime;
         if (d > 30000) { //let's assume the display doesn't get turned on and off too frequetly
-          [sender performSelectorOnMainThread:@selector(configureMouseAndKeyboard) 
+          [sender performSelectorOnMainThread:@selector(wakeUpAfterSleep) 
                                   withObject:nil 
                                waitUntilDone:NO];
         }
