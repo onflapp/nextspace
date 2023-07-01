@@ -10,6 +10,8 @@ VERSION = 0.3
 $(FRAMEWORK_NAME)_CURRENT_VERSION_NAME = 0.3
 $(FRAMEWORK_NAME)_DEPLOY_WITH_CURRENT_VERSION = yes
 
+SUBPROJECTS = backlight_helper
+
 # Abstract classes
 $(FRAMEWORK_NAME)_OBJC_FILES = $(wildcard *.m)
 
@@ -45,8 +47,9 @@ $(FRAMEWORK_NAME)_HEADER_FILES = \
 	\
 	OSEPower.h
 
-$(FRAMEWORK_NAME)_RESOURCE_FILES = 
+$(FRAMEWORK_NAME)_RESOURCE_FILES = backlight_helper/obj/backlight_helper
 
 -include GNUmakefile.preamble
 include $(GNUSTEP_MAKEFILES)/framework.make
+include $(GNUSTEP_MAKEFILES)/aggregate.make
 -include GNUmakefile.postamble

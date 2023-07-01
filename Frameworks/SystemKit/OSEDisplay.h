@@ -54,7 +54,7 @@ typedef struct _NXGammaValue NXGammaValue;
   NSMutableDictionary	*properties;
   
   BOOL			isMain;
-  BOOL      hasDisplayBrightness;
+  NSInteger hasDisplayBrightness;
   // BOOL			isActive;
 }
 

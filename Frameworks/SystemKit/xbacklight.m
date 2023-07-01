@@ -38,6 +38,9 @@
 #include <string.h>
 #include <unistd.h>
 
+#include <Foundation/Foundation.h>
+#import "OSEDisplay.h"
+
 typedef enum { Get, Set, Inc, Dec } op_t;
 
 static char *program_name;
@@ -91,6 +94,41 @@ backlight_set (xcb_connection_t *conn, xcb_randr_output_t output, long value)
     xcb_randr_change_output_property (conn, output, backlight, XCB_ATOM_INTEGER,
 				      32, XCB_PROP_MODE_REPLACE,
 				      1, (unsigned char *)&value);
+}
+
+int
+backlight_helper (char* dpy_name, char* name, double value)
+{
+    NSMutableArray* args = [NSMutableArray array];
+    NSString* cmd = [[NSBundle bundleForClass:[OSEDisplay class]] pathForResource:@"backlight_helper" ofType:@""];
+    if (!cmd) return -1;
+
+    [args addObject:[NSString stringWithFormat:@"%s", name]];
+    [args addObject:[NSString stringWithFormat:@"%ld", (NSInteger)value]];
+
+    NSPipe* pipe = [NSPipe pipe];
+    NSFileHandle* fh = [pipe fileHandleForReading];
+
+    NSTask* task = [[NSTask alloc] init];
+    [task setLaunchPath:cmd];
+    [task setArguments:args];
+    [task setStandardOutput:pipe];
+    [task launch];
+
+    NSData* data = [fh readDataToEndOfFile];
+    [fh closeFile];
+
+    [task waitUntilExit];
+    NSInteger rv = [task terminationStatus];
+    [task release];
+
+    if (rv == 0 && [data length] > 0) {
+      NSString* str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+      NSInteger val = [str integerValue];
+      //NSLog(@"terminated with %d %d", rv, val);
+      return val;
+    }
+    else return -1;
 }
 
 int

@@ -209,6 +209,8 @@
   isMain = NO;
   // isActive = NO;
   output_id = output;
+
+  hasDisplayBrightness = -1;
   
   output_info = XRRGetOutputInfo(xDisplay, screen_resources, output);
 
@@ -218,11 +220,6 @@
   _physicalSize = NSMakeSize((CGFloat)output_info->mm_width,
                             (CGFloat)output_info->mm_height);
   connectionState = output_info->connection;
-
-  if (xbacklight(NULL, "get", 0) == -1)
-    hasDisplayBrightness = NO;
-  else
-    hasDisplayBrightness = YES;
 
   // Get all resolutions for display
   allResolutions = [[NSMutableArray alloc] init];
@@ -869,17 +866,55 @@ find_last_non_clamped(CARD16 array[], int size)
 
 - (BOOL)isDisplayBrightnessSupported
 {
-  return hasDisplayBrightness;
+  if (hasDisplayBrightness == -1) 
+    { 
+      if (xbacklight(NULL, "get", 0) < 0)
+        {
+          NSLog(@"display %@ does not support xbacklight", self);
+          if (backlight_helper(NULL, "get", 0) < 0)
+            {
+              NSLog(@"display %@ does not support backlight_helper", self);
+              hasDisplayBrightness = 0;
+            }
+          else
+            {
+              hasDisplayBrightness = 2;
+            }
+        }
+      else
+        {
+          hasDisplayBrightness = 1;
+        }
+    }
+
+  if (hasDisplayBrightness > 0) 
+    return YES;
+  else
+    return NO;
 }
 
 - (CGFloat)displayBrightness
 {
-  CGFloat val = (CGFloat)ceil(xbacklight(NULL, "get", 0));
-  return val;
+  if (hasDisplayBrightness == 1) {
+    CGFloat val = (CGFloat)ceil(xbacklight(NULL, "get", 0));
+    return val;
+  }
+  else if (hasDisplayBrightness == 2) {
+    CGFloat val = (CGFloat)ceil(backlight_helper(NULL, "get", 0));
+    return val;
+  }
+  else {
+    return 0;
+  }
 }
 - (void)setDisplayBrightness:(CGFloat)brightness
 {
-  xbacklight(NULL, "set", ceil(brightness));
+  if (hasDisplayBrightness == 1) {
+    xbacklight(NULL, "set", ceil(brightness));
+  }
+  else if (hasDisplayBrightness == 2) {
+    backlight_helper(NULL, "set", ceil(brightness));
+  }
 }
 
 #include <unistd.h>
