@@ -866,12 +866,28 @@ find_last_non_clamped(CARD16 array[], int size)
 
 - (BOOL)isDisplayBrightnessSupported
 {
+  if (hasDisplayBrightness == -1)
+    [self displayBrightness];
+
+  if (hasDisplayBrightness > 0) 
+    return YES;
+  else
+    return NO;
+}
+
+- (CGFloat)displayBrightness
+{
+  CGFloat val = -1;
+
+  /* this is very first time we run */
   if (hasDisplayBrightness == -1) 
     { 
-      if (xbacklight(NULL, "get", 0) < 0)
+      val = (CGFloat)ceil(xbacklight(NULL, "get", 0));
+      if (val < 0)
         {
-          NSLog(@"display %@ does not support xbacklight", self);
-          if (backlight_helper(NULL, "get", 0) < 0)
+          NSLog(@"display %@ does not support xbacklight, try backlight_helper", self);
+          val = (CGFloat)ceil(backlight_helper(NULL, "get", 0));
+          if (val < 0)
             {
               NSLog(@"display %@ does not support backlight_helper", self);
               hasDisplayBrightness = 0;
@@ -886,26 +902,19 @@ find_last_non_clamped(CARD16 array[], int size)
           hasDisplayBrightness = 1;
         }
     }
+  else 
+    {
+      if (hasDisplayBrightness == 1)
+        {
+          val = (CGFloat)ceil(xbacklight(NULL, "get", 0));
+        }
+      else if (hasDisplayBrightness == 2) 
+        {
+          val = (CGFloat)ceil(backlight_helper(NULL, "get", 0));
+        }
+    }
 
-  if (hasDisplayBrightness > 0) 
-    return YES;
-  else
-    return NO;
-}
-
-- (CGFloat)displayBrightness
-{
-  if (hasDisplayBrightness == 1) {
-    CGFloat val = (CGFloat)ceil(xbacklight(NULL, "get", 0));
-    return val;
-  }
-  else if (hasDisplayBrightness == 2) {
-    CGFloat val = (CGFloat)ceil(backlight_helper(NULL, "get", 0));
-    return val;
-  }
-  else {
-    return 0;
-  }
+  return val;
 }
 - (void)setDisplayBrightness:(CGFloat)brightness
 {
