@@ -98,7 +98,9 @@
 
 - (NSUInteger)volumeSteps
 {
-  return _sink.volumeSteps;
+  NSUInteger v = _sink.volumeSteps;
+  if (v == 0) v = 65537;
+  return v;
 }
 - (NSUInteger)volume
 {
