@@ -231,6 +231,10 @@ void ext_stream_restore_read_cb(pa_context *ctx,
                                 const pa_ext_stream_restore_info *info,
                                 int eol, void *userdata)
 {
+  if (!info->name) {
+    return;
+  }
+
   NSValue *value;
 
   if (eol < 0) {
@@ -244,7 +248,7 @@ void ext_stream_restore_read_cb(pa_context *ctx,
     return;
   }
 
-  // fprintf(stderr, "[Mixer] Stream: %s for device %s\n", info->name);
+  fprintf(stderr, "[Mixer] Stream: %s\n", info->name);
 
   value = [NSValue value:info
             withObjCType:@encode(const pa_ext_stream_restore_info)];

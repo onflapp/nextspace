@@ -137,8 +137,9 @@
   }
   _name = [[NSString alloc] initWithCString:info->name];
 
-  //desc = pa_proplist_gets(info->proplist, "alsa.card_name"); //no all devices will have alsa.card_name
-  desc = pa_proplist_gets(info->proplist, "device.description");
+  //pa_proplist_gets(info->proplist, "alsa.card_name"); 
+  desc = pa_proplist_gets(info->proplist, "device.description"); //no all devices will have alsa.card_name
+
   _description = [[NSString alloc] initWithCString:desc];
 
   [self _updateProfiles:info];

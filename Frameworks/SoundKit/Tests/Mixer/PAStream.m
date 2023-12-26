@@ -34,7 +34,11 @@ typedef struct pa_ext_stream_restore_info {
   _name = [[NSString alloc] initWithCString:info->name];
   if (_deviceName)
     [_deviceName release];
-  _deviceName = [[NSString alloc] initWithCString:info->device];
+
+  if (info->device)
+    _deviceName = [[NSString alloc] initWithCString:info->device];
+  else
+    _deviceName = [[NSString alloc] initWithFormat:@"unknown device:%@", _name];
   
   if (_volumes)
     [_volumes release];

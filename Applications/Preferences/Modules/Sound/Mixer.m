@@ -80,6 +80,17 @@ static NSLock *browserLock = nil;
   [cardDescription setTextColor:[NSColor darkGrayColor]];
   [window setFrameAutosaveName:@"Mixer"];
   
+  selectedApp = nil;
+  browserLock = [NSLock new];
+  [appBrowser loadColumnZero];
+  [self updateDeviceList];
+  [self browserClick:appBrowser];
+
+  [self performSelector:@selector(__registerNotifications) withObject:nil afterDelay:0.1];
+}
+
+- (void) __registerNotifications 
+{
   [[NSNotificationCenter defaultCenter]
     addObserver:self
        selector:@selector(reloadAppBrowser)
@@ -90,12 +101,6 @@ static NSLock *browserLock = nil;
        selector:@selector(reloadAppBrowser)
            name:SNDDeviceDidRemoveNotification
          object:soundServer];
-
-  selectedApp = nil;
-  browserLock = [NSLock new];
-  [appBrowser loadColumnZero];
-  [self updateDeviceList];
-  [self browserClick:appBrowser];
 }
 
 - (id)window
@@ -549,9 +554,9 @@ static NSLock *browserLock = nil;
   SNDStream *stream = [[sender selectedCellInColumn:0] representedObject];
   NSString  *activePort;
 
-  // NSLog(@"Browser received click: %@, cell - %@, repObject - %@, volume - %lu",
-  //       [sender className], [[sender selectedCellInColumn:0] title],
-  //       [stream className], [stream volume]);
+  NSLog(@"Browser received click: %@, cell - %@, repObject - %@, volume - %lu",
+        [sender className], [[sender selectedCellInColumn:0] title],
+        stream, [stream volume]);
 
   if (selectedApp != stream) {
     if (selectedApp != nil) {
@@ -583,7 +588,7 @@ static NSLock *browserLock = nil;
     else
       activePort = [[soundServer defaultInput] activePort];
   }
-  
+
   if (activePort != nil) {
     [devicePortBtn selectItemWithTitle:activePort];
   }
@@ -601,11 +606,11 @@ static NSLock *browserLock = nil;
 {
   SNDStream *stream = [[appBrowser selectedCellInColumn:0] representedObject];
 
-  // NSLog(@"setAppVolume: sender %@ stream: %@",
-  //       [sender className], [stream className]);
+  NSLog(@"setAppVolume: sender %@ stream: %@ volume:%d",
+        [sender className], stream, [sender intValue]);
 
   [self stopObserveStream:stream];
-  [stream setVolume:[sender integerValue]];
+  [stream setVolume:[sender intValue]];
   [self startObserveStream:stream];
 }
 
@@ -639,7 +644,7 @@ static NSLock *browserLock = nil;
 {
   SNDDevice *device = [[devicePortBtn selectedItem] representedObject];
 
-  [device setVolume:[deviceVolumeSlider integerValue]];
+  [device setVolume:[deviceVolumeSlider intValue]];
 }
 
 - (void)setDeviceBalance:(id)sender
