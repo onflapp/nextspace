@@ -306,11 +306,22 @@ static OSEScreen *systemScreen = nil;
 
   useAutosave = NO;
 
+  /* use XGServerEvent directly to make it more generic
   // Workspace Manager notification sent as a reaction to XRRScreenChangeNotify
   [[NSDistributedNotificationCenter defaultCenter]
     addObserver:self
        selector:@selector(randrScreenDidChange:)
            name:OSEScreenDidChangeNotification
+         object:nil];
+  */
+
+  /*
+    Catch the notification from XGServerEvent.m directly and update randr resources.
+  */
+  [[NSNotificationCenter defaultCenter]
+    addObserver:self
+       selector:@selector(randrScreenDidChange:)
+           name:NSApplicationDidChangeScreenParametersNotification
          object:nil];
 
   return self;

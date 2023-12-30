@@ -160,21 +160,21 @@ static NSMutableDictionary      *domain = nil;
 {
   if (sender == tresholdSlider)
     {
-      [tresholdField setIntValue:[tresholdSlider integerValue]];
+      [tresholdField setIntValue:[tresholdSlider intValue]];
     }
   else if (sender == tresholdField)
     {
-      [tresholdSlider setIntValue:[tresholdField integerValue]];
-      [tresholdField setIntValue:[tresholdSlider integerValue]];
+      [tresholdSlider setIntValue:[tresholdField intValue]];
+      [tresholdField setIntValue:[tresholdSlider intValue]];
     }
   
-  [mouse setAcceleration:0 threshold:[tresholdField integerValue]];
+  [mouse setAcceleration:0 threshold:[tresholdField intValue]];
   [mouse saveToDefaults];
 }
 - (void)setWheelScroll:(id)sender
 {
-  [mouse setWheelScrollLines:[wheelScrollField integerValue]];
-  [mouse setWheelControlScrollLines:[wheelControlScrollField integerValue]];
+  [mouse setWheelScrollLines:[wheelScrollField intValue]];
+  [mouse setWheelControlScrollLines:[wheelControlScrollField intValue]];
   [mouse saveToDefaults];
 }
 

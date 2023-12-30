@@ -299,7 +299,9 @@
   
   [[NSNotificationCenter defaultCenter] removeObserver:self];
   
-  [self setResolution];
+  [self performSelector:@selector(setResolution)
+             withObject:nil
+             afterDelay:0.1];
   
   [[NSNotificationCenter defaultCenter]
     addObserver:self
@@ -310,7 +312,9 @@
 
 - (IBAction)rateClicked:(id)sender
 {
-  [self setResolution];
+  [self performSelector:@selector(setResolution)
+             withObject:nil
+             afterDelay:0.1];
 
   NSLog(@"rateClicked: Selected resolution: %@",
         [[rateBtn selectedCell] representedObject]);
