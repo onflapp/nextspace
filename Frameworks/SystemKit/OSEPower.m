@@ -117,9 +117,9 @@ up_device_added_cb(UpClient *client, UpDevice *device, gpointer user_data)
   NSLog(@"OSEPower: device %s added", up_device_to_text(device));
 }
 static void
-up_device_removed_cb(UpClient *client, UpDevice *device, gpointer user_data)
+up_device_removed_cb(UpClient *client, char *object_path, gpointer user_data)
 {
-  NSLog(@"OSEPower: device %s removed", up_device_to_text(device));
+  NSLog(@"OSEPower: device %s removed", object_path);
 }
 static void
 up_lid_closed_cb(UpClient *client, gpointer user_data)
