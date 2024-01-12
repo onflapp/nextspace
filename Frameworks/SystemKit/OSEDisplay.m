@@ -148,6 +148,7 @@
   NSSize       resSize;
   NSDictionary *res;
   CGFloat      r;
+  NSDictionary *resolution = nil;
   
   for (res in allResolutions)
     {
@@ -156,15 +157,16 @@
           resSize.height == mode_info.height &&
           [[res objectForKey:OSEDisplayRateKey] floatValue] == _activeRate)
         {
+	  resolution = [res retain];
           break;
         }
       else
         {
-          res = nil;
+          resolution = nil;
         }
     }
 
-  return res;
+  return resolution;
 }
 
 // Names are coming from kernel video and drm drivers:
@@ -358,7 +360,7 @@
             {
               if ((float)refresh == (float)resRate)
                 {
-                  resolution = res;
+                  resolution = [res retain];
                   break;
                 }
             }
