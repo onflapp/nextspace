@@ -25,6 +25,7 @@ SUBPROJECTS = \
 	Modules/Expert \
 	Modules/Password \
 	Modules/Date \
+	Modules/Services \
 #	Modules/Power
 
 #
@@ -41,6 +42,7 @@ $(APP_NAME)_RESOURCE_FILES = \
 	Modules/Sound/Sound.preferences \
 	Modules/Expert/Expert.preferences \
 	Modules/Password/Password.preferences \
+	Modules/Services/Services.preferences \
 	Modules/Date/Date.preferences
 
 #	Modules/Power/Power.preferences
