@@ -2,6 +2,7 @@
     "## Comment" = "Do NOT change this file, Gorm maintains it";
     FirstResponder = {
 	Actions = (
+	    "add:",
 	    "capsLockBtnClicked:",
 	    "capsLockMtrxClicked:",
 	    "composeBtnClicked:",
@@ -9,8 +10,10 @@
 	    "layoutMove:",
 	    "layoutRemove:",
 	    "modelBrowserClicked:",
+	    "select:",
 	    "numLockMtrxClicked:",
 	    "numpadMtrxClicked:",
+	    "remove:",
 	    "repeatAction:",
 	    "sectionButtonClicked:",
 	    "setLayoutShortcut:",
@@ -57,7 +60,6 @@
 	    modifiersBox,
 	    keypadBox,
 	    swapBox,
-	    shortcutsBrowser,
 	    deleteKeyMtrx,
 	    numpadMtrx,
 	    capsLockBtn,
@@ -67,7 +69,24 @@
 	    numLockStateMtrx,
 	    modelBrowser,
 	    modelDescription,
-	    modelBox
+	    modelBox,
+	    shortcuts
+	);
+	Super = NSObject;
+    };
+    Shortcuts = {
+	Actions = (
+	    "add:",
+	    "remove:",
+	    "select:"
+	);
+	Outlets = (
+	    browser,
+	    addButton,
+	    removeButton,
+	    applicationField,
+	    titleField,
+	    keyField
 	);
 	Super = NSObject;
     };

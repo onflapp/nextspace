@@ -27,11 +27,13 @@ Keyboard_RESOURCE_FILES = \
 Keyboard_OBJC_FILES = \
 	Keyboard.m \
 	AddLayoutPanel.m \
+	Shortcuts.m \
 	ModifierKeys.m
 
 Keyboard_HEADERS = \
 	Keyboard.h \
 	AddLayoutPanel.h \
+	Shortcuts.h \
 	ModifierKeys.h
 
 -include GNUmakefile.preamble

@@ -66,6 +66,7 @@
 
   // Shortcuts
   id shortcutsBox;
+  id shortcuts;
 
   // Numeric Keypad
   id keypadBox;

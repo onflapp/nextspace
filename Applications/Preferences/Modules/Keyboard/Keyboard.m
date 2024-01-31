@@ -208,6 +208,7 @@ static NXTDefaults *defaults = nil;
       break;
     case 3: // Shortcuts
       [sectionBox setContentView:shortcutsBox];
+      [shortcuts reload];
       break;
     case 4: // Numeric Keypad
       if (!options)
