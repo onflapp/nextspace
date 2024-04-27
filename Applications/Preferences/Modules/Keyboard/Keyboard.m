@@ -228,6 +228,7 @@ static NXTDefaults *defaults = nil;
     default:
       NSLog(@"Keyboard.preferences: Unknow section button was clicked!");
     }
+  [view setNeedsDisplay:YES];
 }
 
 //
