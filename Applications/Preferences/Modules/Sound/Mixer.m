@@ -167,10 +167,16 @@ static NSLock *browserLock = nil;
   
   [deviceProfileBtn removeAllItems];
   if (device) {
-    for (NSDictionary *profile in [device availableProfiles]) {
-      [deviceProfileBtn addItemWithTitle:profile[@"Description"]];
+    NSArray *list = [[device availableProfiles] copy];
+    NSString *active = [device activeProfile];
+
+    for (NSDictionary *profile in list) {
+      NSString *desc = profile[@"Description"];
+      [deviceProfileBtn addItemWithTitle:desc];
     }
-    [deviceProfileBtn selectItemWithTitle:[device activeProfile]];
+    
+    [deviceProfileBtn selectItemWithTitle:active];
+    [list release];
   }
 }
 
