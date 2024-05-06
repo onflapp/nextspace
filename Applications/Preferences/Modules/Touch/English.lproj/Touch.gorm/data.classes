@@ -46,4 +46,14 @@
 	);
 	Super = NSTextField;
     };
+    Touch = {
+	Actions = (
+	);
+	Outlets = (
+	    view,
+	    window,
+	    image
+	);
+	Super = NSObject;
+    };
 }
