@@ -3,9 +3,10 @@
     FirstResponder = {
 	Actions = (
 	    "apply:",
+	    "changeOption:",
 	    "changeSelection:",
 	    "loadThemes:",
-	    "changeOption:",
+	    "configWM:",
 	    "save:",
 	    "settingsAction:",
 	    "styleAction:",
@@ -20,7 +21,8 @@
 	    "changeSelection:",
 	    "loadThemes:",
 	    "open:",
-	    "changeOption:"
+	    "changeOption:",
+	    "configWM:"
 	);
 	Outlets = (
 	    matrix,
