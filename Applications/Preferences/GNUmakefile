@@ -21,6 +21,7 @@ SUBPROJECTS = \
 	Modules/Screen \
 	Modules/Keyboard \
 	Modules/Mouse \
+	Modules/Touch \
 	Modules/Sound \
 	Modules/Expert \
 	Modules/Password \
@@ -39,6 +40,7 @@ $(APP_NAME)_RESOURCE_FILES = \
 	Modules/Screen/Screen.preferences \
 	Modules/Keyboard/Keyboard.preferences \
 	Modules/Mouse/Mouse.preferences \
+	Modules/Touch/Touch.preferences \
 	Modules/Sound/Sound.preferences \
 	Modules/Expert/Expert.preferences \
 	Modules/Password/Password.preferences \
