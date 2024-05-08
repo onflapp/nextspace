@@ -2,8 +2,10 @@
     "## Comment" = "Do NOT change this file, Gorm maintains it";
     FirstResponder = {
 	Actions = (
+	    "changeConfig:",
 	    "doubleClickMtrxClicked:",
 	    "enableSubpixelChanged:",
+	    "advancedConfig:",
 	    "setCursorTheme:",
 	    "setMenuButtonEnabled:",
 	    "setMenuButtonHand:",
@@ -48,11 +50,15 @@
     };
     Touch = {
 	Actions = (
+	    "changeConfig:",
+	    "advancedConfig:"
 	);
 	Outlets = (
 	    view,
 	    window,
-	    image
+	    image,
+	    scrollReversed,
+	    scrollEnabled
 	);
 	Super = NSObject;
     };

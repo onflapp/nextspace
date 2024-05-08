@@ -25,12 +25,12 @@
 #import <AppKit/NSScroller.h>
 #import <AppKit/NSButton.h>
 #import <AppKit/NSEvent.h>
+#import <AppKit/NSWorkspace.h>
 #import <AppKit/NSPopUpButton.h>
 
 #import "Touch.h"
 
 static NSBundle                 *bundle = nil;
-static NSUserDefaults           *defaults = nil;
 
 @implementation Touch
 
@@ -38,8 +38,6 @@ static NSUserDefaults           *defaults = nil;
 {
   self = [super init];
   
-  defaults = [NSUserDefaults standardUserDefaults];
-
   bundle = [NSBundle bundleForClass:[self class]];
   NSString *imagePath = [bundle pathForResource:@"Touch" ofType:@"tiff"];
   image = [[NSImage alloc] initWithContentsOfFile:imagePath];
@@ -64,6 +62,15 @@ static NSUserDefaults           *defaults = nil;
 {
   [view retain];
   [window release];
+
+  NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+  NSDictionary* domain = [defaults persistentDomainForName:NSGlobalDomain];
+
+  BOOL val = [[domain valueForKey:@"ScrollEnabled"] boolValue];
+  [scrollEnabled setState:val];
+
+  val = [[domain valueForKey:@"ScrollReversed"] boolValue];
+  [scrollReversed setState:val];
 }
 
 - (NSView *)view
@@ -88,6 +95,38 @@ static NSUserDefaults           *defaults = nil;
 - (NSImage *)buttonImage
 {
   return image;
+}
+
+- (void) advancedConfig:(id) sender
+{
+  NSWorkspace* ws = [NSWorkspace sharedWorkspace];
+  [ws openFile:@"-configure" withApplication:@"GestureHelper"];
+}
+
+- (void) changeConfig:(id) sender
+{
+  NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+  NSMutableDictionary* domain = [[defaults persistentDomainForName:@"GestureHelper"] mutableCopy];
+
+  BOOL val = [scrollEnabled state];
+  [domain setValue:[NSNumber numberWithBool:val] forKey:@"ScrollEnabled"];
+
+  val = [scrollReversed state];
+  [domain setValue:[NSNumber numberWithBool:val] forKey:@"ScrollReversed"];
+
+  [defaults setPersistentDomain:domain forName:@"GestureHelper"];
+  [defaults synchronize];
+
+  [NSObject cancelPreviousPerformRequestsWithTarget:self];
+  [self performSelector:@selector(_notifyConfigChange) 
+             withObject:nil
+             afterDelay:1.0];
+}
+
+- (void) _notifyConfigChange 
+{
+  NSWorkspace* ws = [NSWorkspace sharedWorkspace];
+  [ws openFile:@"-reconfigure" withApplication:@"GestureHelper"];
 }
 
 @end

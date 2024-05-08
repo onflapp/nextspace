@@ -10,6 +10,7 @@ static void close_restricted(int fd, void* user_data) {
     close(fd);
 }
 
+
 BOOL initialize_context() {
     last_time.tv_usec = 0;
     last_time.tv_sec = 0;
@@ -59,6 +60,7 @@ BOOL device_exists() {
     return device_found;
 }
 
+
 void handle_hold(struct libinput_event_gesture* gev, int state) {
     int count = libinput_event_gesture_get_finger_count(gev);
     if (state == 1) {
@@ -72,6 +74,7 @@ void handle_hold(struct libinput_event_gesture* gev, int state) {
     }
 }
 
+#ifdef HAS_LIBINPUT19
 void handle_scroll(struct libinput_event_pointer* ev) {
     int has_vert = libinput_event_pointer_has_axis(ev, LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL);
     if (!has_vert) return;
@@ -120,6 +123,7 @@ void handle_scroll(struct libinput_event_pointer* ev) {
         }
     }
 }
+#endif //HAS_LIBINPUT19
 
 void handle_event() {
     libinput_dispatch(libinput);
@@ -180,6 +184,7 @@ void handle_event() {
             break;
         case LIBINPUT_EVENT_SWITCH_TOGGLE:
             break;
+#ifdef HAS_LIBINPUT19
         case LIBINPUT_EVENT_GESTURE_HOLD_BEGIN:
             handle_hold(libinput_event_get_gesture_event(libinput_event), 1);
             break;
@@ -189,6 +194,7 @@ void handle_event() {
         case LIBINPUT_EVENT_POINTER_SCROLL_FINGER:
             handle_scroll(libinput_event_get_pointer_event(libinput_event));
             break;
+#endif //HAS_LIBINPUT19
         }
 
         libinput_event_destroy(libinput_event);

@@ -23,7 +23,10 @@ void close_context();
 void start_loop();
 BOOL device_exists();
 void handle_event();
-void handle_scroll(struct libinput_event_pointer* ev);
 void handle_hold(struct libinput_event_gesture* gev, int state);
+
+#ifdef HAS_LIBINPUT19
+void handle_scroll(struct libinput_event_pointer* ev);
+#endif //HAS_LIBINPUT19
 
 #endif //INPUT_HPP

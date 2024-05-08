@@ -27,6 +27,9 @@
   id view;
   id window;
   id image;
+
+  NSButton *scrollEnabled;
+  NSButton *scrollReversed;
 }
 
 @end
