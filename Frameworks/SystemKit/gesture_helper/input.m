@@ -83,19 +83,22 @@ void handle_scroll(struct libinput_event_pointer* ev) {
 
     //double x = libinput_event_pointer_get_scroll_value(ev, LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL);
     double y = libinput_event_pointer_get_scroll_value(ev, LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL);
-    scroll_delta += y;
-
-    if (last_time.tv_sec == 0) {
-        gettimeofday(&last_time, NULL);
-        scroll_count++;
+    if (y > 0 && (scroll_dir == 0 || scroll_dir == 1)) {
+        scroll_dir = 1;
+        scroll_delta += y;
     }
-    else if (y == 0) {
+    else if (y < 0 && (scroll_dir == 0 || scroll_dir == -1)) {
+        scroll_dir = -1;
+        scroll_delta -= y;
+    }
+    else {
         last_time.tv_sec = 0;
         scroll_delta = 0;
         scroll_dir = 0;
         scroll_count = 0;
     }
-    else {
+
+    if (scroll_dir != 0) {
         struct timeval t;
         struct timeval d;
         gettimeofday(&t, NULL);
@@ -103,12 +106,8 @@ void handle_scroll(struct libinput_event_pointer* ev) {
         timersub(&t, &last_time, &d);
         int x = d.tv_usec / 10000;
         //NSLog(@">> %d.%d %d", d.tv_sec, x, scroll_count);
-        if ((d.tv_sec == 0 && x > 10) || scroll_count > 0) {
-            if (scroll_dir == 0) {
-                if (scroll_delta > 0) scroll_dir = 1;
-                else                  scroll_dir = -1;
-            }
 
+        if (scroll_delta > 10 && x > 10) {
             if (scroll_dir > 0) {
                 printf("SCROLL_DOWN\n");
             }
@@ -120,6 +119,7 @@ void handle_scroll(struct libinput_event_pointer* ev) {
             last_time.tv_usec = t.tv_usec;
             scroll_delta = 0;
             scroll_count = 0;
+            scroll_dir = 0;
         }
     }
 }
